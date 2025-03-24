@@ -1,0 +1,14 @@
+spring:
+  profiles:
+    include: route
+  application:
+    name: gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 121.199.36.161:8848
+        username: nacos
+        password: nacos
+
+server:
+  port: 8080
