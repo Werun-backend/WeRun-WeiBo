@@ -6,9 +6,9 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 121.199.36.161:8848
-        username: nacos
-        password: nacos
+       server-addr: 121.199.36.161:8848
+       username: nacos
+       password: nacos
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
 security:

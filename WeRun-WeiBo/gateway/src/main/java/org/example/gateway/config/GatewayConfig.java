@@ -22,6 +22,7 @@ public class GatewayConfig implements GlobalFilter {
         // 验证JWT令牌
         try {
             // 解析JWT令牌，获取用户信息
+
             // 如果解析失败，抛出异常
         } catch (Exception e) {
             return Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token"));
