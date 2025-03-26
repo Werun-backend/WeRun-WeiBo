@@ -9,6 +9,8 @@ import org.example.auth.POJO.VO.LoginVO;
 import org.example.auth.Service.LoginService;
 import org.example.auth.Utils.JwtUtils;
 import org.example.auth.Utils.MD5Encryptor;
+import org.example.common.model.global.AppException;
+import org.example.common.model.global.HttpStatus;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +24,10 @@ public class LoginServiceImpl implements LoginService {
         loginDTO.setUserPassword(MD5Encryptor.encryptToMD5(loginDTO.getUserPassword()));
         LoginPO loginPO = loginMapper.login(loginDTO);
         if (loginPO.getId() ==0 || loginPO.getStatus()<=0) {
-            throw new RuntimeException("用户名或者密码错误");
+            throw new AppException(HttpStatus.BAD_REQUEST,"用户名或者密码错误",null);
         }
         //创建JWT构造器
-        JwtUtils jwtUtils = new JwtUtils();
-        String jwt = jwtUtils.generateToken(loginPO.getId());
+        String jwt = JwtUtils.generateToken(loginPO.getId());
         stringRedisTemplate.opsForValue().set("jwt:"+ loginPO.getId(), jwt,3600,java.util.concurrent.TimeUnit.SECONDS);
         return new LoginVO(jwt);
     }

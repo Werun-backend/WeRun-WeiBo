@@ -1,4 +1,4 @@
-package org.example.gateway.Utils;
+package org.example.user.Utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -14,7 +14,7 @@ public class JwtUtils {
     //令牌有效的时长
     private static final long EXPIRATION = 3600; // 1小时
 //生成JWT令牌
-    public String generateToken(Integer id) {
+    public static String generateToken(Integer id) {
         String newId = id.toString();
         return Jwts.builder()
                 .setId(newId)
@@ -23,15 +23,4 @@ public class JwtUtils {
                 .compact();
     }
 
-    public boolean validateToken(String token) {
-        try {
-            Claims claims = Jwts.parser()
-                    .setSigningKey(SECRET_KEY)
-                    .parseClaimsJws(token)
-                    .getBody();
-            return !claims.getExpiration().before(new Date());
-        } catch (Exception e) {
-            return false;
-        }
-    }
 }

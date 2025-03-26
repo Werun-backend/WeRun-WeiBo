@@ -7,6 +7,7 @@ import org.example.auth.POJO.DTO.RegisterDTO;
 import org.example.auth.POJO.VO.LoginVO;
 import org.example.auth.Service.LoginService;
 import org.example.common.model.global.BaseResult;
+import org.example.common.model.global.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,14 +31,15 @@ public class LoginController {
     @PostMapping("/logout")
     public BaseResult logout(@RequestHeader(value = "id") int id) {
         loginService.logout(id);
-        return BaseResult.success("退出成功");
+        return BaseResult.success("退出成功", null);
     }
 
     @PostMapping("/register")
     public BaseResult register(@RequestBody @Valid RegisterDTO registerDTO) {
 
         loginService.register(registerDTO);
-        return BaseResult.success();
-
+        LoginDTO loginDTO = new LoginDTO(registerDTO.getUserPhone(),registerDTO.getUserPassword());
+        login(loginDTO);
+        return BaseResult.success("完成注册并登录",null);
     }
 }

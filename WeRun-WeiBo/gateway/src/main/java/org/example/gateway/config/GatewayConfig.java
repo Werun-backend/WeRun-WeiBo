@@ -28,8 +28,7 @@ public class GatewayConfig implements GlobalFilter {
         // 验证JWT令牌
         try {
             // 解析JWT令牌，获取用户信息
-            JwtUtils jwtUtils = new JwtUtils();
-            Claims claims = jwtUtils.parseJWT(token.substring(7));
+            Claims claims = JwtUtils.parseJWT(token.substring(7));
             // 如果解析失败，抛出异常
             String id = claims.getId();
             String redisKey = "jwt:" + Integer.parseInt(id);

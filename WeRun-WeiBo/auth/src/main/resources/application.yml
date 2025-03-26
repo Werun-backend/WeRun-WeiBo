@@ -16,7 +16,4 @@ security:
     client:
       client-id: client  # 客户端ID
       client-secret: secret  # 客户端密钥
-      scope: read,write  # 授权范围
-      authorized-grant-types: password,refresh_token,client_credentials  # 授权模式
-      access-token-validity-seconds: 3600  # 访问令牌有效期（秒）
-      refresh-token-validity-seconds: 7200  # 刷新令牌有效期（秒）
+      access-token-uri: = http://localhost:9010/auth/oauth/token
