@@ -3,17 +3,35 @@ server:
 spring:
   application:
     name: auth
-  cloud:
-    nacos:
-      discovery:
-       server-addr: 121.199.36.161:8848
-       username: nacos
-       password: nacos
+#  cloud:
+#    nacos:
+#      discovery:
+#       server-addr: 192.168.11.128:8848
+#       username: nacos
+#       password: nacos
+  datasource:
+    url: jdbc:mysql://192.168.11.128:3308/nacos?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
-security:
-  oauth2:
-    client:
-      client-id: client  # 客户端ID
-      client-secret: secret  # 客户端密钥
-      access-token-uri: = http://localhost:9010/auth/oauth/token
+  data:
+    redis:
+      host: 192.168.11.128
+      port: 6379
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: 10000ms
+logging:
+  level:
+    org.springframework.security: debug
+#security:
+#  oauth2:
+#    client:
+#      client-id: client  # 客户端ID
+#      client-secret: secret  # 客户端密钥
+#      access-token-uri: = http://localhost:9010/auth/oauth/token

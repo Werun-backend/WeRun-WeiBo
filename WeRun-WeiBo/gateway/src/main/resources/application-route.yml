@@ -21,3 +21,8 @@ spring:
           uri: lb://service-friend
           predicates:
             - Path=/weibo/friend/**
+        - id: auth-route
+          uri: lb://auth
+          predicates:
+            - Path=/weibo/auth/**
+            -

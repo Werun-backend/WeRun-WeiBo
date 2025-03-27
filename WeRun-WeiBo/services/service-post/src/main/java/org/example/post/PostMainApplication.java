@@ -7,7 +7,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 
 @SpringBootApplication
-// 开启服务发现
 @EnableDiscoveryClient
 @EnableOAuth2Sso
 public class PostMainApplication {
