@@ -15,7 +15,7 @@ public class RegisterDTO {
     private String Phone;
     //这是密码，在注册端已经符合格式，不需要检验格式，必填
     @NotNull(message = "密码不能为空")
-    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-zA-Z])(?=.*[^\\da-zA-Z\\s]).{1,9}$",message = "至少包含字母、数字、特殊字符，1-9位")
+    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-zA-Z])(?=.*[^\\da-zA-Z\\s]).{1,20}$",message = "至少包含字母、数字、特殊字符，1-20位")
     private String Password;
     @Pattern(regexp = "^([男女])$",message = "性别只能是男或女")
     private String gender;
