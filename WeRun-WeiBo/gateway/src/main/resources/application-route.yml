@@ -25,4 +25,3 @@ spring:
           uri: lb://auth
           predicates:
             - Path=/weibo/auth/**
-            -

@@ -10,7 +10,7 @@ import lombok.Data;
 public class LoginPO {
 
 
-    private int id;
+    private int Id;
 
-    private int status;
+    private int Status;
 }

@@ -11,5 +11,5 @@ public interface LoginService {
     void logout(int id);
 
 
-    void register(@Valid RegisterDTO registerDTO);
+    void register(RegisterDTO registerDTO);
 }

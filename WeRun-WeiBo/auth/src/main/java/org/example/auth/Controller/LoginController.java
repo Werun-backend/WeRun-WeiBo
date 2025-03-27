@@ -25,7 +25,7 @@ public class LoginController {
         } catch (Exception e) {
             return BaseResult.error("用户名或者密码错误");
         }
-        return BaseResult.success("登录成功", loginVO);
+        return BaseResult.success("登录成功", loginVO.getToken());
     }
 
     @PostMapping("/logout")
@@ -36,10 +36,9 @@ public class LoginController {
 
     @PostMapping("/register")
     public BaseResult register(@RequestBody @Valid RegisterDTO registerDTO) {
-
+        LoginDTO loginDTO = new LoginDTO(registerDTO.getPhone(),registerDTO.getPassword());
         loginService.register(registerDTO);
-        LoginDTO loginDTO = new LoginDTO(registerDTO.getUserPhone(),registerDTO.getUserPassword());
-        login(loginDTO);
-        return BaseResult.success("完成注册并登录",null);
+        BaseResult result = login(loginDTO);
+        return BaseResult.success("完成注册并登录",result.getData());
     }
 }
