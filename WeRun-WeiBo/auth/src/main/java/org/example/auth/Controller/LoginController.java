@@ -7,7 +7,8 @@ import org.example.auth.POJO.DTO.RegisterDTO;
 import org.example.auth.POJO.VO.LoginVO;
 import org.example.auth.Service.LoginService;
 import org.example.common.model.global.BaseResult;
-import org.example.common.model.global.HttpStatus;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -40,5 +41,10 @@ public class LoginController {
         loginService.register(registerDTO);
         BaseResult result = login(loginDTO);
         return BaseResult.success("完成注册并登录",result.getData());
+    }
+    @PreAuthorize("denyAll()")
+    @GetMapping("/Oss")
+    public BaseResult Oss() {
+        return BaseResult.error("未知访问",HttpStatus.FORBIDDEN);
     }
 }

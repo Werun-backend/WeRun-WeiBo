@@ -1,29 +1,21 @@
 spring:
   cloud:
     gateway:
-      globalcors:
-        cors-configurations:
-          '[/**]':
-            allowedOrigins: "*"
-            allowedMethods: "*"
-            allowedHeaders: "*"
-            allowCredentials: true
+#      globalcors:
+#        cors-configurations:
+#          '[/**]':
+#            allowedOrigins: "*"
+#            allowedMethods: "*"
+#            allowedHeaders: "*"
+#            allowCredentials: true
       routes:
-        - id: user-route
-          uri: lb://service-user
-          predicates:
-            - Path=/weibo/user/**
-        - id: post-route
+
+        - id: service-post
           uri: lb://service-post
           predicates:
             - Path=/weibo/post/**
-        - id: friend-route
+        - id: service-friend
           uri: lb://service-friend
           predicates:
             - Path=/weibo/friend/**
-          filters:
-            - id：
-        - id: auth-route
-          uri: lb://auth
-          predicates:
-            - Path=/weibo/auth/**
+
