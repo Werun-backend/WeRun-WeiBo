@@ -1,4 +1,4 @@
-package org.example.user.config;
+package org.example.auth.Config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.PASSWORD)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .redirectUri("http://localhost:9010/auth/login")
+                .redirectUri("http://localhost:8080/auth/login")
                 .scope("all")
                 .build();
         return new InMemoryRegisteredClientRepository(client);
