@@ -11,11 +11,9 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -26,24 +24,15 @@ public class GatewayConfig implements GlobalFilter , Ordered {
     private final StringRedisTemplate stringRedisTemplate;
 
     // 从配置中心获取认证服务器地址
-    private static final String AUTH_SERVER_URL = "http://localhost:9010/auth/login";
-    // 排除路径配置（支持Ant风格）
-    private static final String[] EXCLUDED_PATHS = {
-            "/auth/callback/**",
-            "/public/**"
-    };
+    private static final String AUTH_SERVER_URL = "http://localhost:9010/auth/Oss";
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         ServerHttpResponse response = exchange.getResponse();
         String token = exchange.getRequest().getHeaders().getFirst("Authorization");
         if (token == null || !token.startsWith("Bearer ")) {
-            // 构造重定向URL
-            String redirectUrl = buildRedirectUrl(request);
-            // 设置重定向响应
-            response.setStatusCode(HttpStatus.FOUND);
-            response.getHeaders().setLocation(URI.create(redirectUrl));
-            return response.setComplete();
+            return Redirect(request, response);
         }
         // 验证JWT令牌
         try {
@@ -55,16 +44,26 @@ public class GatewayConfig implements GlobalFilter , Ordered {
             String redisValue = stringRedisTemplate.opsForValue().get(redisKey);
             // 如果请求头中的token为空，返回未登录信息
             if(redisValue==null || redisValue.isEmpty()){
-                throw new RuntimeException("身份校验失败");
+                return Redirect(request, response);
             }
             if (!stringRedisTemplate.hasKey(redisKey) || !redisValue.trim().equals(token.substring(7))) {
-                throw new RuntimeException("身份校验失败");
+                return Redirect(request, response);
             }
         } catch (Exception e) {
-            return Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token"));
+            return Redirect(request, response);
         }
         return chain.filter(exchange);
     }
+
+    private Mono<Void> Redirect(ServerHttpRequest request, ServerHttpResponse response) {
+        // 构造重定向URL
+        String redirectUrl = buildRedirectUrl(request);
+        // 设置重定向响应
+        response.setStatusCode(HttpStatus.FOUND);
+        response.getHeaders().setLocation(URI.create(redirectUrl));
+        return response.setComplete();
+    }
+
     private String buildRedirectUrl(ServerHttpRequest request) {
         try {
             String originalUrl = request.getURI().toString();
