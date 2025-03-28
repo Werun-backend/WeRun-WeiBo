@@ -141,12 +141,12 @@ public class BaseResult<T> {
     }
 
     public Object get(String tag){
-        switch (tag){
-            case MSG_TAG: return msg;
-            case CODE_TAG: return code;
-            case DATA_TAG: return data;
-        }
-        return null;
+        return switch (tag) {
+            case MSG_TAG -> msg;
+            case CODE_TAG -> code;
+            case DATA_TAG -> data;
+            default -> null;
+        };
     }
     public void put(String tag, Object o){
         switch (tag){
