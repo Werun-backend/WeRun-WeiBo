@@ -24,7 +24,7 @@ public class GatewayConfig implements GlobalFilter , Ordered {
     private final StringRedisTemplate stringRedisTemplate;
 
     // 从配置中心获取认证服务器地址
-    private static final String AUTH_SERVER_URL = "http://localhost:9010/auth/Oss";
+    private static final String AUTH_SERVER_URL = "http://localhost:8081/Oss";
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {

@@ -1,16 +1,16 @@
-//package org.example.user.Filter;
+//package org.example.auth.Filter;
 //
 //import io.jsonwebtoken.Claims;
 //import jakarta.servlet.*;
-//import jakarta.servlet.annotation.WebFilter;
+//
 //import jakarta.servlet.http.HttpServletRequest;
-//import lombok.NoArgsConstructor;
+//
 //import lombok.RequiredArgsConstructor;
 //import lombok.extern.slf4j.Slf4j;
+//import org.example.auth.Utils.JwtUtils;
 //import org.example.common.model.global.AppException;
 //import org.example.common.model.global.HttpStatus;
-//import org.example.user.Utils.JwtUtils;
-//import org.springframework.beans.factory.annotation.Autowired;
+//
 //import org.springframework.data.redis.core.StringRedisTemplate;
 //
 //import java.io.IOException;

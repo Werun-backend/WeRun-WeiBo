@@ -8,8 +8,7 @@ import org.example.auth.POJO.VO.LoginVO;
 public interface LoginService {
     LoginVO login(LoginDTO loginDTO);
 
-    void logout(int id);
-
+    void logout(String jwt);
 
     void register(RegisterDTO registerDTO);
 }

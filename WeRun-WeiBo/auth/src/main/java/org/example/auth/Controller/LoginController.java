@@ -7,8 +7,6 @@ import org.example.auth.POJO.DTO.RegisterDTO;
 import org.example.auth.POJO.VO.LoginVO;
 import org.example.auth.Service.LoginService;
 import org.example.common.model.global.BaseResult;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class LoginController {
     private final LoginService loginService;
-
     @PostMapping("/login")
     public BaseResult login(@RequestBody @Valid LoginDTO loginDTO) {
         //校验登录
@@ -30,9 +27,9 @@ public class LoginController {
     }
 
     @PostMapping("/logout")
-    public BaseResult logout(@RequestHeader(value = "id") int id) {
-        loginService.logout(id);
-        return BaseResult.success("退出成功", null);
+    public BaseResult logout(@RequestHeader(value = "Authorization") String jwt) {
+        loginService.logout(jwt);
+        return BaseResult.success("退出成功", jwt);
     }
 
     @PostMapping("/register")
@@ -42,9 +39,5 @@ public class LoginController {
         BaseResult result = login(loginDTO);
         return BaseResult.success("完成注册并登录",result.getData());
     }
-    @PreAuthorize("denyAll()")
-    @GetMapping("/Oss")
-    public BaseResult Oss() {
-        return BaseResult.error("未知访问",HttpStatus.FORBIDDEN);
-    }
+
 }

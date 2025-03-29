@@ -11,4 +11,5 @@ public class RegisterPO {
     private String Password;
     private String Gender;
     private String AvatarURL;
+    private String uuid;
 }
