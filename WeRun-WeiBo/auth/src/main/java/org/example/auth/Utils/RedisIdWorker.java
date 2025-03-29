@@ -46,13 +46,12 @@ public class RedisIdWorker {
             stringRedisTemplate.opsForValue().set(key, "0");
         }
 
-        // 对键进行自增操作
+        // 对键进行自增操作,避免时间戳之差重复
         Long count = stringRedisTemplate.opsForValue().increment(key);
         // 如果自增失败，则抛出异常
         if (count == null) {
             throw new RuntimeException("Failed to increment Redis key: " + key);
         }
-
         // 将时间戳偏移量和自增计数组合成一个64位的ID
         return (timeStamp << 32) | count;
     }

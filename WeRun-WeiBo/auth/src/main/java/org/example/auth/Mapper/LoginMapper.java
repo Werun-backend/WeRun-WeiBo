@@ -13,8 +13,8 @@ import java.util.List;
 
 @Mapper
 public interface LoginMapper {
-    @Select("select Id,Status from WeiBo.Users where Phone = #{Phone} and Password =#{Password}")
+    @Select("select UUID, USERNAME, PHONE, EMAIL, PASSWORD, STATUS, SIGNATURE, AVATARURL, ADDRESS, CREATED_AT, UPDATED_AT, GENDER, BIRTHDAY from WeiBo.Users where Phone = #{Phone} and Password =#{Password}")
     List<LoginPO> login(LoginDTO loginDTO);
-    @Insert("insert into WeiBo.Users (Username,Phone,Password,Gender,AvatarURL) values (#{Username},#{Phone},#{Password},#{Gender},#{AvatarURL})")
+    @Insert("insert into WeiBo.Users (Username,Phone,Password,Gender,AvatarURL,uuid) values (#{Username},#{Phone},#{Password},#{Gender},#{AvatarURL},#{uuid})")
     void register(RegisterPO registerPO);
 }

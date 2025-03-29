@@ -11,13 +11,19 @@ import org.example.auth.POJO.VO.LoginVO;
 import org.example.auth.Service.LoginService;
 import org.example.auth.Utils.JwtUtils;
 import org.example.auth.Utils.MD5Encryptor;
+import org.example.auth.Utils.RedisIdWorker;
 import org.example.common.model.global.AppException;
 import org.example.common.model.global.HttpStatus;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -35,20 +41,38 @@ public class LoginServiceImpl implements LoginService {
         //利用负载均衡从登录列表中随机获取一个
         LoginPO oneloginPO = newLoginPO.get(RandomUtil.randomInt(0, newLoginPO.size()-1));
         //创建JWT构造器
-        String jwt = JwtUtils.generateToken(oneloginPO.getId());
-        stringRedisTemplate.opsForValue().set("jwt:"+ oneloginPO.getId(), jwt,3600,java.util.concurrent.TimeUnit.SECONDS);
+        Map<String,Object> map =new HashMap<>();
+        map.put("users", oneloginPO);
+        String jwt = JwtUtils.generateToken(map);
         return new LoginVO(jwt);
     }
 
     @Override
-    public void logout(int id) {
-        stringRedisTemplate.delete("jwt:"+id);
+    public void logout(String jwt) {
+        stringRedisTemplate.opsForValue().set("blacklist:jwt", jwt);
     }
 
     @Override
-    public void register(RegisterDTO registerDTO) {
+    public void register(RegisterDTO registerDTO, MultipartFile file) throws IOException {
+        RedisIdWorker redisIdWorker = new RedisIdWorker(stringRedisTemplate);
+        String imagePath = "/var/weiboImage" + redisIdWorker
+                .nextId("image") +
+                "." +
+                Objects.requireNonNull(file.getOriginalFilename()).
+                        substring(file.
+                                getOriginalFilename().
+                                lastIndexOf(".") + 1);
+        file.transferTo(new File(imagePath));
         registerDTO.setPassword(MD5Encryptor.encryptToMD5(registerDTO.getPassword()));
-        loginMapper.register(new RegisterPO(registerDTO.getUserName(), registerDTO.getPhone(), registerDTO.getPassword(), registerDTO.getGender(), registerDTO.getAvatar()));
+        loginMapper.register(new RegisterPO(
+                registerDTO.getUserName(),
+                registerDTO.getPhone(),
+                registerDTO.getPassword(),
+                registerDTO.getGender(),
+                imagePath,
+                String.valueOf(redisIdWorker.nextId("uuid"))
+                )
+        );
     }
 
 
