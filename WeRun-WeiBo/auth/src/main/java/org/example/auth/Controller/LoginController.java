@@ -8,6 +8,9 @@ import org.example.auth.POJO.VO.LoginVO;
 import org.example.auth.Service.LoginService;
 import org.example.common.model.global.BaseResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/auth")
@@ -33,9 +36,9 @@ public class LoginController {
     }
 
     @PostMapping("/register")
-    public BaseResult register(@RequestBody @Valid RegisterDTO registerDTO) {
+    public BaseResult register(@RequestBody @Valid RegisterDTO registerDTO,MultipartFile file) throws IOException {
         LoginDTO loginDTO = new LoginDTO(registerDTO.getPhone(),registerDTO.getPassword());
-        loginService.register(registerDTO);
+        loginService.register(registerDTO,file);
         BaseResult result = login(loginDTO);
         return BaseResult.success("完成注册并登录",result.getData());
     }

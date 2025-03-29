@@ -19,6 +19,6 @@ public class RegisterDTO {
     private String Password;
     @Pattern(regexp = "^([男女])$",message = "性别只能是男或女")
     private String gender;
-    @Pattern(regexp = "^(http|https|ftp|rtsp|mms)://(\\w+:\\w+@)?(\\S*)(:[0-9]+)?(/\\S*)?$",message = "请填入正确的头像链接")
-    private String avatar;
+
+
 }

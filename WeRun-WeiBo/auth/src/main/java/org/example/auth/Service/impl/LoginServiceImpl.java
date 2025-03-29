@@ -16,10 +16,14 @@ import org.example.common.model.global.AppException;
 import org.example.common.model.global.HttpStatus;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -49,15 +53,23 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public void register(RegisterDTO registerDTO) {
-        registerDTO.setPassword(MD5Encryptor.encryptToMD5(registerDTO.getPassword()));
+    public void register(RegisterDTO registerDTO, MultipartFile file) throws IOException {
         RedisIdWorker redisIdWorker = new RedisIdWorker(stringRedisTemplate);
+        String imagePath = "/var/weiboImage" + redisIdWorker
+                .nextId("image") +
+                "." +
+                Objects.requireNonNull(file.getOriginalFilename()).
+                        substring(file.
+                                getOriginalFilename().
+                                lastIndexOf(".") + 1);
+        file.transferTo(new File(imagePath));
+        registerDTO.setPassword(MD5Encryptor.encryptToMD5(registerDTO.getPassword()));
         loginMapper.register(new RegisterPO(
                 registerDTO.getUserName(),
                 registerDTO.getPhone(),
                 registerDTO.getPassword(),
                 registerDTO.getGender(),
-                registerDTO.getAvatar(),
+                imagePath,
                 String.valueOf(redisIdWorker.nextId("uuid"))
                 )
         );
