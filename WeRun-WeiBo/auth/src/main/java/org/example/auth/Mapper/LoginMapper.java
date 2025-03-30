@@ -3,10 +3,13 @@ package org.example.auth.Mapper;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.example.auth.POJO.DTO.LoginByCodeDTO;
 import org.example.auth.POJO.DTO.LoginDTO;
+import org.example.auth.POJO.DTO.ResetPasswordDTO;
 import org.example.auth.POJO.PO.LoginPO;
 import org.example.auth.POJO.PO.RegisterPO;
+import org.example.auth.POJO.PO.ResetPO;
 
 import java.util.List;
 
@@ -20,4 +23,6 @@ public interface LoginMapper {
     int checkMail(String email);
     @Select("select UUID, USERNAME, PHONE, EMAIL, PASSWORD, STATUS, SIGNATURE, AVATARURL, ADDRESS, CREATED_AT, UPDATED_AT, GENDER, BIRTHDAY from WeiBo.Users where Email = #{Email}")
     List<LoginPO> LoginByCode(String EMAIL);
+    @Update("update WeiBo.Users set Password = #{Password} where Email = #{Email} and Phone =#{Phone}")
+    void ResetPassword(ResetPO resetPO);
 }

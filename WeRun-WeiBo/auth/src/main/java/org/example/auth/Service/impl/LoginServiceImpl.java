@@ -3,12 +3,10 @@ package org.example.auth.Service.impl;
 import cn.hutool.core.util.RandomUtil;
 import lombok.RequiredArgsConstructor;
 import org.example.auth.Mapper.LoginMapper;
-import org.example.auth.POJO.DTO.LoginByCodeDTO;
-import org.example.auth.POJO.DTO.LoginDTO;
-import org.example.auth.POJO.DTO.MLoginDTO;
-import org.example.auth.POJO.DTO.RegisterDTO;
+import org.example.auth.POJO.DTO.*;
 import org.example.auth.POJO.PO.LoginPO;
 import org.example.auth.POJO.PO.RegisterPO;
+import org.example.auth.POJO.PO.ResetPO;
 import org.example.auth.POJO.VO.LoginVO;
 import org.example.auth.Service.LoginService;
 import org.example.auth.Utils.JwtUtils;
@@ -86,7 +84,10 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public void mLogin(MLoginDTO mloginDTO) {
-        String email = mloginDTO.getEmail();
+        sendCode(mloginDTO.getEmail(), "code");
+    }
+
+    private void sendCode(String email, String type) {
         if (stringRedisTemplate.hasKey("email:code:"+email)) {
             throw new AppException(HttpStatus.BAD_REQUEST,"验证码已发送",null);
         }
@@ -96,7 +97,7 @@ public class LoginServiceImpl implements LoginService {
         SimpleMailMessage mail =new SimpleMailMessage();
         mail.setSubject("验证码");
         String code = RandomUtil.randomNumbers(6);
-        stringRedisTemplate.opsForValue().set("email:code:"+email, code, 600, java.util.concurrent.TimeUnit.SECONDS);
+        stringRedisTemplate.opsForValue().set("email:"+ type +":"+email, code, 600, java.util.concurrent.TimeUnit.SECONDS);
         mail.setText("验证码为："+ code);
         mail.setTo(email);
         mail.setFrom("3221834658@qq.com");
@@ -105,16 +106,33 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public LoginVO LoginByCode(LoginByCodeDTO l) {
-        if (stringRedisTemplate.hasKey("email:code:"+l.getEmail())) {
-            String code = stringRedisTemplate.opsForValue().get("email:code:"+l.getEmail());
+        CheckCode(l,"code");
+        List<LoginPO> loginPO = loginMapper.LoginByCode(l.getEmail());
+        return jwtMaker(loginPO);
+    }
+
+    private void CheckCode(LoginByCodeDTO l,String key) {
+        if (stringRedisTemplate.hasKey("email:"+key+":"+ l.getEmail())) {
+            String code = stringRedisTemplate.opsForValue().get("email:"+key+":"+ l.getEmail());
             if (code != null && !code.equals(l.getCode())) {
                 throw new AppException(HttpStatus.BAD_REQUEST, "验证码错误", null);
             }
         }else {
             throw new AppException(HttpStatus.BAD_REQUEST,"验证码已过期",null);
         }
-        List<LoginPO> loginPO = loginMapper.LoginByCode(l.getEmail());
-        return jwtMaker(loginPO);
+    }
+
+    @Override
+    public void Reset(ResetDTO resetDTO) {
+        sendCode(resetDTO.getEmail(), "reset");
+    }
+
+    @Override
+    public void ResetPassword(ResetPasswordDTO resetPasswordDTO) {
+        CheckCode(new LoginByCodeDTO(resetPasswordDTO.getEmail(), resetPasswordDTO.getCode()),"reset");
+        resetPasswordDTO.setPassword(MD5Encryptor.encryptToMD5(resetPasswordDTO.getPassword()));
+        ResetPO resetPO = new ResetPO(resetPasswordDTO.getEmail(), resetPasswordDTO.getPhone(),resetPasswordDTO.getPassword());
+        loginMapper.ResetPassword(resetPO);
     }
 
 

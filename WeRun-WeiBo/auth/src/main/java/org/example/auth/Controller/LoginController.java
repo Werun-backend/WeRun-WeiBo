@@ -2,10 +2,7 @@ package org.example.auth.Controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.auth.POJO.DTO.LoginByCodeDTO;
-import org.example.auth.POJO.DTO.LoginDTO;
-import org.example.auth.POJO.DTO.MLoginDTO;
-import org.example.auth.POJO.DTO.RegisterDTO;
+import org.example.auth.POJO.DTO.*;
 import org.example.auth.POJO.VO.LoginVO;
 import org.example.auth.Service.LoginService;
 import org.example.common.model.global.BaseResult;
@@ -64,6 +61,16 @@ public class LoginController {
         loginService.register(registerDTO,file);
         BaseResult result = login(loginDTO);
         return BaseResult.success("完成注册并登录",result.getData());
+    }
+    @PostMapping("/Reset")
+    public BaseResult Reset(@RequestBody @Valid ResetDTO resetDTO){
+        loginService.Reset(resetDTO);
+        return BaseResult.success("已发送重置密码",null);
+    }
+    @PostMapping("/ResetPassword")
+    public BaseResult ResetPassword(@RequestBody @Valid ResetPasswordDTO resetPasswordDTO) {
+        loginService.ResetPassword(resetPasswordDTO);
+        return BaseResult.success("完成重置密码并登录",null);
     }
 
 }
