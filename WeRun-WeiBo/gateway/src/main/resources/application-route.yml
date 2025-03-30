@@ -14,7 +14,6 @@ spring:
           uri: lb://service-post
           predicates:
             - Path=/weibo/post/**
-
         - id: service-friend
           uri: lb://service-friend
           predicates:
