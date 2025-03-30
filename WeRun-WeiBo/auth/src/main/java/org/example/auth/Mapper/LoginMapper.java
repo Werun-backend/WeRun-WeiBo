@@ -1,12 +1,12 @@
 package org.example.auth.Mapper;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-import org.example.auth.POJO.DTO.LoginByCodeDTO;
 import org.example.auth.POJO.DTO.LoginDTO;
-import org.example.auth.POJO.DTO.ResetPasswordDTO;
 import org.example.auth.POJO.PO.LoginPO;
 import org.example.auth.POJO.PO.RegisterPO;
 import org.example.auth.POJO.PO.ResetPO;
@@ -25,4 +25,6 @@ public interface LoginMapper {
     List<LoginPO> LoginByCode(String EMAIL);
     @Update("update WeiBo.Users set Password = #{Password} where Email = #{Email} and Phone =#{Phone}")
     void ResetPassword(ResetPO resetPO);
+    @Select("select count(*) from WeiBo.Users where Phone = #{Phone} or Email = #{Email}")
+    int checkUnique( String phone, String email);
 }

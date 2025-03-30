@@ -19,6 +19,8 @@ public class RegisterDTO {
     private String Password;
     @Pattern(regexp = "^([男女])$",message = "性别只能是男或女")
     private String gender;
-
+    @NotNull(message = "邮箱不能为空")
+    @Pattern(regexp = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$",message = "请填入正确的邮箱的格式")
+    private String Email;
 
 }

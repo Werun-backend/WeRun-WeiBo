@@ -2,6 +2,7 @@ package org.example.auth.Controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.auth.POJO.BO.CheckEmailBO;
 import org.example.auth.POJO.DTO.*;
 import org.example.auth.POJO.VO.LoginVO;
 import org.example.auth.Service.LoginService;
@@ -39,7 +40,7 @@ public class LoginController {
         return BaseResult.success("发送成功", null);
     }
     @PostMapping("/login/emailCode")
-    public BaseResult LoginByCode(@RequestBody @Valid LoginByCodeDTO l) {
+    public BaseResult LoginByCode(@RequestBody @Valid CheckEmailBO l) {
         //校验登录
         LoginVO loginVO;
         try {
@@ -55,10 +56,15 @@ public class LoginController {
         return BaseResult.success("退出成功", jwt);
     }
 
-    @PostMapping("/register")
-    public BaseResult register(@RequestBody @Valid RegisterDTO registerDTO,MultipartFile file) throws IOException {
-        LoginDTO loginDTO = new LoginDTO(registerDTO.getPhone(),registerDTO.getPassword());
+    @PostMapping("/register/sendCode")
+    public BaseResult registerSend(@RequestBody @Valid RegisterDTO registerDTO,MultipartFile file) throws IOException {
         loginService.register(registerDTO,file);
+        return BaseResult.success("发送成功",null);
+    }
+    @PostMapping("/register/OK")
+    public BaseResult register(@RequestBody @Valid RegisterDTO registerDTO,MultipartFile file,String code) throws IOException {
+        LoginDTO loginDTO = new LoginDTO(registerDTO.getPhone(),registerDTO.getPassword());
+        loginService.registerOK(registerDTO,file,code);
         BaseResult result = login(loginDTO);
         return BaseResult.success("完成注册并登录",result.getData());
     }

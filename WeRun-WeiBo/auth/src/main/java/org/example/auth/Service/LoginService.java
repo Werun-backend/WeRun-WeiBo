@@ -1,6 +1,7 @@
 package org.example.auth.Service;
 
 import jakarta.validation.Valid;
+import org.example.auth.POJO.BO.CheckEmailBO;
 import org.example.auth.POJO.DTO.*;
 import org.example.auth.POJO.VO.LoginVO;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,9 +17,11 @@ public interface LoginService {
 
     void mLogin(@Valid MLoginDTO mloginDTO);
 
-    LoginVO LoginByCode(@Valid LoginByCodeDTO l);
+    LoginVO LoginByCode(@Valid CheckEmailBO l);
 
     void Reset(@Valid ResetDTO resetDTO);
 
     void ResetPassword(@Valid ResetPasswordDTO resetPasswordDTO);
+
+    void registerOK(@Valid RegisterDTO registerDTO, MultipartFile file, String code) throws IOException;
 }

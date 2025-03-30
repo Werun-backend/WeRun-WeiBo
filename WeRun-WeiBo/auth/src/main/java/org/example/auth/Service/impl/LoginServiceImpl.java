@@ -3,6 +3,7 @@ package org.example.auth.Service.impl;
 import cn.hutool.core.util.RandomUtil;
 import lombok.RequiredArgsConstructor;
 import org.example.auth.Mapper.LoginMapper;
+import org.example.auth.POJO.BO.CheckEmailBO;
 import org.example.auth.POJO.DTO.*;
 import org.example.auth.POJO.PO.LoginPO;
 import org.example.auth.POJO.PO.RegisterPO;
@@ -61,25 +62,10 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public void register(RegisterDTO registerDTO, MultipartFile file) throws IOException {
-        RedisIdWorker redisIdWorker = new RedisIdWorker(stringRedisTemplate);
-        String imagePath = "/var/weiboImage" + redisIdWorker
-                .nextId("image") +
-                "." +
-                Objects.requireNonNull(file.getOriginalFilename()).
-                        substring(file.
-                                getOriginalFilename().
-                                lastIndexOf(".") + 1);
-        file.transferTo(new File(imagePath));
-        registerDTO.setPassword(MD5Encryptor.encryptToMD5(registerDTO.getPassword()));
-        loginMapper.register(new RegisterPO(
-                registerDTO.getUserName(),
-                registerDTO.getPhone(),
-                registerDTO.getPassword(),
-                registerDTO.getGender(),
-                imagePath,
-                String.valueOf(redisIdWorker.nextId("uuid"))
-                )
-        );
+        if(loginMapper.checkUnique(registerDTO.getPhone(),registerDTO.getEmail())!=0){
+            throw new AppException(HttpStatus.BAD_REQUEST,"手机号或邮箱已被注册",null);
+        }
+        sendCode(registerDTO.getEmail(),"register");
     }
 
     @Override
@@ -105,13 +91,13 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public LoginVO LoginByCode(LoginByCodeDTO l) {
+    public LoginVO LoginByCode(CheckEmailBO l) {
         CheckCode(l,"code");
         List<LoginPO> loginPO = loginMapper.LoginByCode(l.getEmail());
         return jwtMaker(loginPO);
     }
 
-    private void CheckCode(LoginByCodeDTO l,String key) {
+    private void CheckCode(CheckEmailBO l, String key) {
         if (stringRedisTemplate.hasKey("email:"+key+":"+ l.getEmail())) {
             String code = stringRedisTemplate.opsForValue().get("email:"+key+":"+ l.getEmail());
             if (code != null && !code.equals(l.getCode())) {
@@ -129,11 +115,33 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public void ResetPassword(ResetPasswordDTO resetPasswordDTO) {
-        CheckCode(new LoginByCodeDTO(resetPasswordDTO.getEmail(), resetPasswordDTO.getCode()),"reset");
+        CheckCode(new CheckEmailBO(resetPasswordDTO.getEmail(), resetPasswordDTO.getCode()),"reset");
         resetPasswordDTO.setPassword(MD5Encryptor.encryptToMD5(resetPasswordDTO.getPassword()));
         ResetPO resetPO = new ResetPO(resetPasswordDTO.getEmail(), resetPasswordDTO.getPhone(),resetPasswordDTO.getPassword());
         loginMapper.ResetPassword(resetPO);
     }
 
-
+    @Override
+    public void registerOK(RegisterDTO registerDTO, MultipartFile file, String code) throws IOException {
+        CheckCode(new CheckEmailBO(registerDTO.getEmail(), code),"register");
+        RedisIdWorker redisIdWorker = new RedisIdWorker(stringRedisTemplate);
+        String imagePath = "/var/weiboImage" + redisIdWorker
+                .nextId("image") +
+                "." +
+                Objects.requireNonNull(file.getOriginalFilename()).
+                        substring(file.
+                                getOriginalFilename().
+                                lastIndexOf(".") + 1);
+        file.transferTo(new File(imagePath));
+        registerDTO.setPassword(MD5Encryptor.encryptToMD5(registerDTO.getPassword()));
+        loginMapper.register(new RegisterPO(
+                registerDTO.getUserName(),
+                registerDTO.getPhone(),
+                registerDTO.getPassword(),
+                registerDTO.getGender(),
+                imagePath,
+                String.valueOf(redisIdWorker.nextId("uuid"))
+                )
+        );
+    }
 }
