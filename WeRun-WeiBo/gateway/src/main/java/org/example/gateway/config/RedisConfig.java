@@ -14,7 +14,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig {
     /**
      * 创建自定义的RedisTemplate实例
-     *
      * @param factory Redis连接工厂，用于创建和管理Redis连接
      * @return RedisTemplate实例，用于执行与Redis相关的操作
      */
