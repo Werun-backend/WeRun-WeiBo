@@ -3,7 +3,9 @@ package org.example.auth.Service.impl;
 import cn.hutool.core.util.RandomUtil;
 import lombok.RequiredArgsConstructor;
 import org.example.auth.Mapper.LoginMapper;
+import org.example.auth.POJO.DTO.LoginByCodeDTO;
 import org.example.auth.POJO.DTO.LoginDTO;
+import org.example.auth.POJO.DTO.MLoginDTO;
 import org.example.auth.POJO.DTO.RegisterDTO;
 import org.example.auth.POJO.PO.LoginPO;
 import org.example.auth.POJO.PO.RegisterPO;
@@ -15,6 +17,8 @@ import org.example.auth.Utils.RedisIdWorker;
 import org.example.common.model.global.AppException;
 import org.example.common.model.global.HttpStatus;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,13 +34,18 @@ import java.util.Objects;
 public class LoginServiceImpl implements LoginService {
     private final LoginMapper loginMapper;
     private final StringRedisTemplate stringRedisTemplate;
+    private final MailSender sender;
     @Override
     public LoginVO login(LoginDTO loginDTO) {
         loginDTO.setPassword(MD5Encryptor.encryptToMD5(loginDTO.getPassword()));
         List<LoginPO> loginPO = loginMapper.login(loginDTO);
+        return jwtMaker(loginPO);
+    }
+
+    private static LoginVO jwtMaker(List<LoginPO> loginPO) {
         List<LoginPO> newLoginPO = loginPO.stream().filter(aloginPO -> aloginPO.getStatus() > 0).toList();
         if (newLoginPO.isEmpty()) {
-            throw new AppException(HttpStatus.BAD_REQUEST,"用户名或者密码错误",null);
+            throw new AppException(HttpStatus.BAD_REQUEST,"登录错误",null);
         }
         //利用负载均衡从登录列表中随机获取一个
         LoginPO oneloginPO = newLoginPO.get(RandomUtil.randomInt(0, newLoginPO.size()-1));
@@ -73,6 +82,39 @@ public class LoginServiceImpl implements LoginService {
                 String.valueOf(redisIdWorker.nextId("uuid"))
                 )
         );
+    }
+
+    @Override
+    public void mLogin(MLoginDTO mloginDTO) {
+        String email = mloginDTO.getEmail();
+        if (stringRedisTemplate.hasKey("email:code:"+email)) {
+            throw new AppException(HttpStatus.BAD_REQUEST,"验证码已发送",null);
+        }
+        if(loginMapper.checkMail(email)<0){
+            throw new AppException(HttpStatus.BAD_REQUEST,"邮箱未绑定手机号",null);
+        }
+        SimpleMailMessage mail =new SimpleMailMessage();
+        mail.setSubject("验证码");
+        String code = RandomUtil.randomNumbers(6);
+        stringRedisTemplate.opsForValue().set("email:code:"+email, code, 600, java.util.concurrent.TimeUnit.SECONDS);
+        mail.setText("验证码为："+ code);
+        mail.setTo(email);
+        mail.setFrom("3221834658@qq.com");
+        sender.send(mail);
+    }
+
+    @Override
+    public LoginVO LoginByCode(LoginByCodeDTO l) {
+        if (stringRedisTemplate.hasKey("email:code:"+l.getEmail())) {
+            String code = stringRedisTemplate.opsForValue().get("email:code:"+l.getEmail());
+            if (code != null && !code.equals(l.getCode())) {
+                throw new AppException(HttpStatus.BAD_REQUEST, "验证码错误", null);
+            }
+        }else {
+            throw new AppException(HttpStatus.BAD_REQUEST,"验证码已过期",null);
+        }
+        List<LoginPO> loginPO = loginMapper.LoginByCode(l.getEmail());
+        return jwtMaker(loginPO);
     }
 
 

@@ -26,6 +26,10 @@ spring:
           max-idle: 8
           min-idle: 0
           max-wait: 10000ms
+  mail:
+    username: 3221834658@qq.com
+    password: dtortzhxcjeochhf
+    host: smtp.qq.com
 logging:
   level:
     org.springframework.security: debug
