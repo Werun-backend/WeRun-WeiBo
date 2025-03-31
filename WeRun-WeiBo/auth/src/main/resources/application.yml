@@ -29,13 +29,14 @@ spring:
   mail:
     username: 3221834658@qq.com
     password: dtortzhxcjeochhf
-    host: smtp.qq.com
+    host: smtp.qq.com+
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: Ov23li1VgdcfCCkPne5i
+            client-secret: 38205fdf4a46ab93958af743309202f266673117
 logging:
   level:
     org.springframework.security: debug
-#security:
-#  oauth2:
-#    client:
-#      client-id: client  # 客户端ID
-#      client-secret: secret  # 客户端密钥
-#      access-token-uri: = http://localhost:9010/auth/oauth/token
