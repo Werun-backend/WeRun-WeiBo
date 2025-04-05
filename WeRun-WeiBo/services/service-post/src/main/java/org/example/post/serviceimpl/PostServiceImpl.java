@@ -9,14 +9,17 @@ import org.example.post.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 
-@Service
+
 @Slf4j
 @Data
+@Service
 public class PostServiceImpl implements PostService {
 
     @Autowired
@@ -34,55 +37,70 @@ public class PostServiceImpl implements PostService {
                 log.error("Scheduled time is not set for the post");
                 return;
             }
-            long executeTime = postPO.getScheduleTime().toInstant().toEpochMilli();
-            scheduleService.schedulePost(postPO,newtags,selectedTags,executeTime);}
-
-            else {
-                // 非定时发布的逻辑
-                // 插入帖子
-                postMapper.insertPost(postPO);
-
-                // 查询帖子的 ID
-                String postId = postPO.getUuid();
-
-                // 展示所有标签及其Id
-                List<String> tags = postMapper.selectTags();
-
-
-                //查询标签库中某个标签的Id 插入标签
-                List<Long> tagIds = selectedTags.stream()
-                        .map(tagName -> postMapper.selectTagId(tagName))
-                        .collect(Collectors.toList());
-                for (String tagName : selectedTags) {
-                    Long tagId = postMapper.selectTagId(tagName);
-                    if (tagId != null) {
-                        tagIds.add(tagId);
-                        postMapper.insertPostTag(postId, tagId);
-                    }
+            // 修复：增加非空检查
+//            try {
+//                long executeTime = postPO.getScheduleTime().toInstant().toEpochMilli();
+//                scheduleService.schedulePost(postPO, newtags, selectedTags, executeTime);
+//            } catch (NullPointerException e) {
+//                log.error("Error while processing scheduled time: {}", e.getMessage(), e);
+//                return;
+//            }
+//        }
+            try {
+                // 确保 getScheduleTime() 返回的是 LocalDateTime 类型
+                LocalDateTime scheduleTime = postPO.getScheduleTime();
+                if (scheduleTime != null) {
+                    long executeTime = scheduleTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+                    scheduleService.schedulePost(postPO, newtags, selectedTags, executeTime);
+                } else {
+                    log.error("ScheduleTime is null, cannot process scheduled post.");
                 }
+            } catch (Exception e) {
+                log.error("Error while processing scheduled time: {}", e.getMessage(), e);
+                return;
+            }
+        } else {
+            // 非定时发布的逻辑
+            // 插入帖子
+            postMapper.insertPost(postPO);
+
+            // 查询帖子的 ID
+            String postId = postPO.getUuid();
+
+            // 展示所有标签及其Id
+            List<String> tags = postMapper.selectTags();
 
 
-                // 插入新的标签并获取ID 插入标签
-                if (newtags != null && !newtags.isEmpty()) {
-                    newtags.forEach(tagName -> {
-                        Long tagId = postMapper.selectTagId(tagName);
-                        if (tagId == null) {
-                            postMapper.insertTag(tagName);
-                            tagId = postMapper.selectTagId(tagName);
-                            postMapper.insertPostTag(postId, tagId);
-                        }
-                    });
+            //查询标签库中某个标签的Id 插入标签
+            List<Long> tagIds = selectedTags.stream()
+                    .map(tagName -> postMapper.selectTagId(tagName))
+                    .collect(Collectors.toList());
+            for (String tagName : selectedTags) {
+                Long tagId = postMapper.selectTagId(tagName);
+                if (tagId != null) {
+                    tagIds.add(tagId);
+                    postMapper.insertPostTag(postId, tagId);
                 }
             }
 
 
+            // 插入新的标签并获取ID 插入标签
+            if (newtags != null && !newtags.isEmpty()) {
+                newtags.forEach(tagName -> {
+                    Long tagId = postMapper.selectTagId(tagName);
+                    if (tagId == null) {
+                        postMapper.insertTag(tagName);
+                        tagId = postMapper.selectTagId(tagName);
+                        postMapper.insertPostTag(postId, tagId);
+                    }
+                });
+            }
         }
 
 
-
-    /**
-     * 插入帖子及其标签关联
-     */
+        /**
+         * 插入帖子及其标签关联
+         */
 //    @Override
 //    public void insertPost(PostPO postPo, List<String> newtags, List<String> selectedTags) {
 //        log.info("PostServiceImpl.insertPost()");
@@ -125,7 +143,7 @@ public class PostServiceImpl implements PostService {
 //            }
 //        }
 //
-
+    }
 
     /**
      * 更新帖子  仅包含删除标签
@@ -189,6 +207,11 @@ public class PostServiceImpl implements PostService {
         log.info("PostServiceImpl.deletePost()");
         postMapper.deletePost(uuid);
         // 实现删除逻辑
+    }
+
+    @Override
+    public PostPO getPostById(String taskId) {
+        return postMapper.selectPostById(taskId);
     }
 
     /**
