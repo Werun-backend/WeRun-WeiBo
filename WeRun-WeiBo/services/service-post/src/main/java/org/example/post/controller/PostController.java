@@ -1,14 +1,35 @@
 package org.example.post.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.example.post.pojo.PO.PostPO;
+import org.example.post.service.PostService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("weibo/post")
+import java.util.List;
+
+@RequestMapping("weibo/editpost")
 @RestController
 public class PostController {
-    @GetMapping("/test")
-    public String test(){
-        return "success";
-    }
+
+
+        @Autowired
+        private PostService postService;
+
+        @GetMapping("/insert")
+        public void insertPost(@RequestBody PostPO postPo, @RequestParam List<String> newtags, @RequestParam List<String> selectedtags) {
+            postService.publishPost(postPo, newtags, selectedtags);
+        }
+
+        @PostMapping("/update")
+        public void updatePost(@RequestBody PostPO postPo, @RequestParam List<String> deletetags, @RequestParam List<String> newtags, @RequestParam List<String> selectedtags) {
+            postService.updatePost(postPo, deletetags, newtags, selectedtags);
+        }
+
+
+
+        @DeleteMapping("/{uuid}")
+        public void deletePost(@PathVariable String uuid) {
+            postService.deletePost(uuid);
+        }
+
 }
