@@ -3,6 +3,7 @@ package org.example.post.serviceimpl;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.example.post.mapper.PostMapper;
+import org.example.post.pojo.DTO.UpdateDto;
 import org.example.post.pojo.PO.PostPO;
 import org.example.post.service.PostService;
 import org.example.post.service.ScheduleService;
@@ -145,12 +146,12 @@ public class PostServiceImpl implements PostService {
      * 更新帖子  仅包含删除标签
      */
     @Override
-    public void updatePost(PostPO postPo, List<String> deletetags, List<String> newtags, List<String> selectedtags) {
+    public void updatePost(UpdateDto updateDto, List<String> deletetags, List<String> newtags, List<String> selectedtags) {
         log.info("PostServiceImpl.updatePost()");
-        postMapper.updatePost(postPo);
+        postMapper.updatePost(updateDto);
 
         // 查询帖子的 ID
-        String postId = postPo.getUuid();
+        String postId = updateDto.getUuid();
 
 
 //        //查看所改帖子关联的所有标签

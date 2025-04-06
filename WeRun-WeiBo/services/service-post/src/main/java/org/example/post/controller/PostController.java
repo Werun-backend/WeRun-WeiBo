@@ -1,5 +1,6 @@
 package org.example.post.controller;
 
+import org.example.post.pojo.DTO.UpdateDto;
 import org.example.post.pojo.PO.PostPO;
 import org.example.post.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,8 @@ public class PostController {
         }
 
         @PostMapping("/update")
-        public void updatePost(@RequestBody PostPO postPo, @RequestParam List<String> deletetags, @RequestParam List<String> newtags, @RequestParam List<String> selectedtags) {
-            postService.updatePost(postPo, deletetags, newtags, selectedtags);
+        public void updatePost(@RequestBody UpdateDto updateDto, @RequestParam List<String> deletetags, @RequestParam List<String> newtags, @RequestParam List<String> selectedtags) {
+            postService.updatePost(updateDto, deletetags, newtags, selectedtags);
         }
 
 

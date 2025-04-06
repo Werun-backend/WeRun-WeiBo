@@ -1,6 +1,7 @@
 package org.example.post.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.example.post.pojo.DTO.UpdateDto;
 import org.example.post.pojo.PO.PostPO;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public interface PostMapper {
         void insertPost(PostPO postPO);
         //更新帖子
         @Update("UPDATE post SET title = #{title}, content = #{content}, updatetime = #{updateTime} WHERE uuid = #{uuid}")
-        void updatePost(PostPO postPO);
+        void updatePost(UpdateDto updateDto);
 
         //删除帖子
         @Delete("DELETE FROM post WHERE uuid = #{uuid}")
