@@ -10,6 +10,7 @@ public class UpdateDto {
     private String uuid;
     private String title;
     private String content;
-    private Set<String> tags;
+    private Set<String> deletetags;
+    private Set<String> addtags;
     private LocalDateTime updatedate;
 }

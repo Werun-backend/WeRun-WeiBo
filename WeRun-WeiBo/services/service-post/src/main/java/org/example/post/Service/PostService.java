@@ -19,7 +19,7 @@ public interface PostService {
 //
 //    void insertPostTag(Long postid, Long tagid);
 
-    void updatePost(UpdateDto updateDto, List<String> deleteTags, List<String> newTags, List<String> selectedTags);
+    void updatePost(UpdateDto updateDto);
     //    void insertTag(String tagname);
 //    void selectTagId(String tagname);
 //    void deletePostTag(Long postid, Long tagid);
@@ -34,6 +34,6 @@ public interface PostService {
 //    void deletePostTag(Long postid, Long tagid);
 //
 //    void updatePostTag(Long postid, Long tagid);
-    PostPO getPostById(String uuid);
+    PostDTO getPostById(String uuid);
 
 }

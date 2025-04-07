@@ -51,32 +51,39 @@ public class PostServiceImpl implements PostService {
             } catch (Exception e) {
                 logger.error("Error while processing scheduled time: {}", e.getMessage(), e);
             }
-        } else {
+        } else if (postDTO.getSchedule() == 1|| postDTO.getSchedule() == 2){
             // 非定时发布的逻辑
             // 插入帖子
             logger.debug("开始发布帖子");
             postMapper.insertPost(postDTO);
             logger.debug("帖子发布完成");// 查询帖子的 ID
             String postId = postDTO.getUuid();
-            // 插入新的标签并获取ID 插入标签
+            // 插入插入标签
             if (postDTO.getTags() != null && !postDTO.getTags().isEmpty()) {
                 postDTO.getTags().forEach(tagName -> {
-                    Long tagId = postMapper.selectTagId(tagName);
-                    if (tagId == null) {
-                        postMapper.insertTag(tagName);
-                        tagId = postMapper.selectTagId(tagName);
-                        postMapper.insertPostTag(postId, tagId);
+                    if (tagName == null) {
+                        postMapper.insertPostTag(postId, tagName);
                     }
                 });
             }
+//            if (postDTO.getTags() != null && !postDTO.getTags().isEmpty()) {
+//                postDTO.getTags().forEach(tagName -> {
+//                    Long tagId = postMapper.selectTagId(tagName);
+//                    if (tagId == null) {
+//                        postMapper.insertTag(tagName);
+//                        tagId = postMapper.selectTagId(tagName);
+//                        postMapper.insertPostTag(postId, tagId);
+//                    }
+//                });
+            }
         }
-    }
+
 
     /**
      * 更新帖子  仅包含删除标签
      */
     @Override
-    public void updatePost(UpdateDto updateDto, List<String> deleteTags, List<String> newTags, List<String> selectedTags) {
+    public void updatePost(UpdateDto updateDto) {
         logger.info("PostServiceImpl.updatePost()");
         postMapper.updatePost(updateDto);
 
@@ -91,35 +98,28 @@ public class PostServiceImpl implements PostService {
 //        List<String> tags = postMapper.selectTagsByPostId(Long.parseLong(postId));
 
         // 删除帖子关联的某个标签
-        if (deleteTags != null && !deleteTags.isEmpty()) {
-            deleteTags.forEach(tagName -> {
-                Long tagId = postMapper.selectTagId(tagName);
-                if (tagId != null) {
-                    postMapper.deletePostTags(Long.parseLong(postId), tagId);
-                }
+        if (updateDto.getDeletetags() != null)
+            updateDto.getDeletetags().forEach(tagName -> {
+
+                    postMapper.deletePostTags(postId, tagName);
+
             });
-        }
+//        if (deleteTags != null && !deleteTags.isEmpty()) {
+//            deleteTags.forEach(tagName -> {
+//                Long tagId = postMapper.selectTagId(tagName);
+//                if (tagId != null) {
+//                    postMapper.deletePostTags(Long.parseLong(postId), tagId);
+//                }
+//            });
+//        }
         //查询标签库中某个标签的Id 插入标签
 //        List<Long> tagIds = selectedTags.stream()
 //                .map(tagName -> postMapper.selectTagId(tagName))
-//                .collect(Collectors.toList());
-        for (String tagName : selectedTags) {
-            Long tagId = postMapper.selectTagId(tagName);
-            if (tagId != null) {
-//                tagIds.add(tagId);
-                postMapper.insertPostTag(postId, tagId);
-            }
-        }
-
-
-        // 插入新的标签并获取ID 插入标签
-        if (newTags != null && !newTags.isEmpty()) {
-            newTags.forEach(tagName -> {
-                Long tagId = postMapper.selectTagId(tagName);
-                if (tagId == null) {
-                    postMapper.insertTag(tagName);
-                    tagId = postMapper.selectTagId(tagName);
-                    postMapper.insertPostTag(postId, tagId);
+        //添加标签
+        if (updateDto.getAddtags() != null && !updateDto.getAddtags().isEmpty()) {
+            updateDto.getAddtags().forEach(tagName  -> {
+                if (tagName == null) {
+                    postMapper.insertPostTag(postId, tagName);
                 }
             });
         }
@@ -137,7 +137,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostPO getPostById(String taskId) {
+    public PostDTO  getPostById(String taskId) {
         return postMapper.selectPostById(taskId);
     }
 

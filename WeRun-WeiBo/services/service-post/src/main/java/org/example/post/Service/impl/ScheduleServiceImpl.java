@@ -19,9 +19,12 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     private final RedisTemplate<String, String> redisTemplate;
     private final PostService postService;
-    public ScheduleServiceImpl(RedisTemplate<String, String> redisTemplate, PostService postService) {
+    private final ScheduleService scheduleService;
+
+    public ScheduleServiceImpl(RedisTemplate<String, String> redisTemplate, PostService postService, ScheduleService scheduleService) {
         this.redisTemplate = redisTemplate;
         this.postService = postService;
+        this.scheduleService = scheduleService;
     }
     Logger logger = LoggerFactory.getLogger(ScheduleServiceImpl.class);
     @Override
@@ -46,18 +49,27 @@ public class ScheduleServiceImpl implements ScheduleService {
         if (tasks != null&& !tasks.isEmpty())
             for (String taskId : tasks) {
                 // 根据 taskId 获取帖子信息
-                PostPO post = postService.getPostById(taskId);
+                PostDTO post = postService.getPostById(taskId);
                 if (post != null) {
                     List<String> newtags = redisTemplate.opsForList().range("tags:new:" + taskId, 0, -1);
                     List<String> selectedTags = redisTemplate.opsForList().range("tags:selected:" + taskId, 0, -1);
 
                     // 发布帖子
-                    postService.publishPost(post, newtags, selectedTags);
+                    postService.publishPost(post);
+
+                    //将schedule字段设置为2
+                    scheduleService.updatePostSchedule(taskId);
+
 
                     // 从 Sorted Set 中移除已执行的任务
                     redisTemplate.opsForZSet().remove("post", taskId);
                 }
             }
 
+    }
+
+    @Override
+    public void updatePostSchedule(String uuid) {
+        scheduleService.updatePostSchedule(uuid);
     }
 }

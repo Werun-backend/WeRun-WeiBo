@@ -11,4 +11,7 @@ public interface ScheduleService {
 
     //扫描并执行任务
     void scanAndExecuteTask();
+
+    // 更新帖子状态
+    void updatePostSchedule(String uuid);
 }

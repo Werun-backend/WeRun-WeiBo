@@ -3,6 +3,7 @@ package org.example.post.Mapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.example.post.POJO.PO.PostPO;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -13,6 +14,6 @@ public interface SearchPostMapper {
     List<PostPO> searchPosts(String keyword);
 
     //根据输入的标签查询帖子
-    @Select("SELECT p.* FROM post p JOIN post_tags pt ON p.uuid = pt.post_id JOIN tags t ON pt.tag_id = t.id WHERE t.tag_name = #{tagName}")
-    List<PostPO> searchPostsByTag(String tagName);
+    @Select("SELECT p.* FROM post p JOIN post_tags pt ON p.id = pt.post_id WHERE pt.tagname LIKE CONCAT('%', #{tagname}, '%')")
+    List<PostPO> searchPostsByTag(@Param("tagname") String tagname);
 }

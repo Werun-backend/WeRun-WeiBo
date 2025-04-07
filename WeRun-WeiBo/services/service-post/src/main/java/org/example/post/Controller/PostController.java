@@ -22,12 +22,12 @@ public class PostController {
     }
 
     @PostMapping("/update")
-    public void updatePost(@RequestBody UpdateDto updateDto, @RequestParam List<String> deleteTags, @RequestParam List<String> newTags, @RequestParam List<String> selectedTags) {
-        postService.updatePost(updateDto, deleteTags, newTags, selectedTags);
+    public void updatePost(@RequestBody UpdateDto updateDto) {
+        postService.updatePost(updateDto);
     }
 
-    @DeleteMapping("/{uuid}")
+    @DeleteMapping("/daleta")
     public void deletePost(@PathVariable String uuid) {
-            postService.deletePost(uuid);
+        postService.deletePost(uuid);
         }
 }
