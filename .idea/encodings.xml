@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/WeRun-WeiBo/auth/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/WeRun-WeiBo/common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/WeRun-WeiBo/gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/WeRun-WeiBo/services/service-friend/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/WeRun-WeiBo/services/service-post/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/WeRun-WeiBo/services/service-user/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/WeRun-WeiBo/services/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/WeRun-WeiBo/services/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/WeRun-WeiBo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/WeRun-WeiBo/src/main/resources" charset="UTF-8" />
+  </component>
+</project>
