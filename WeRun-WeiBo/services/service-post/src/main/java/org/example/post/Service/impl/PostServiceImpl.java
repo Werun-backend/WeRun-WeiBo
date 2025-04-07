@@ -2,8 +2,7 @@ package org.example.post.Service.impl;
 
 import org.example.post.Mapper.PostMapper;
 import org.example.post.POJO.DTO.PostDTO;
-import org.example.post.POJO.DTO.UpdateDto;
-import org.example.post.POJO.PO.PostPO;
+import org.example.post.POJO.DTO.UpdateDTO;
 import org.example.post.Service.PostService;
 import org.example.post.Service.ScheduleService;
 import org.slf4j.Logger;
@@ -12,8 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -46,44 +43,32 @@ public class PostServiceImpl implements PostService {
                 logger.debug("定时发布时间正常进行");
                 long executeTime = scheduleTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
                 logger.debug("定时发布时间转换");
-                scheduleService.schedulePost(postDTO, executeTime);
-                logger.debug("持久化完成");
+                scheduleService.schedulePost(postDTO, executeTime+10);
+                logger.debug("完成定时发布服务");
             } catch (Exception e) {
                 logger.error("Error while processing scheduled time: {}", e.getMessage(), e);
             }
         } else if (postDTO.getSchedule() == 1|| postDTO.getSchedule() == 2){
-            // 非定时发布的逻辑
-            // 插入帖子
             logger.debug("开始发布帖子");
             postMapper.insertPost(postDTO);
             logger.debug("帖子发布完成");// 查询帖子的 ID
             String postId = postDTO.getUuid();
-            // 插入插入标签
+            logger.debug("将标签放到数据库进行管理");
             if (postDTO.getTags() != null && !postDTO.getTags().isEmpty()) {
                 postDTO.getTags().forEach(tagName -> {
-                    if (tagName == null) {
+                    if (tagName != null) {
+                        logger.info("存入标签{}，{}",postId,tagName);
                         postMapper.insertPostTag(postId, tagName);
                     }
                 });
             }
-//            if (postDTO.getTags() != null && !postDTO.getTags().isEmpty()) {
-//                postDTO.getTags().forEach(tagName -> {
-//                    Long tagId = postMapper.selectTagId(tagName);
-//                    if (tagId == null) {
-//                        postMapper.insertTag(tagName);
-//                        tagId = postMapper.selectTagId(tagName);
-//                        postMapper.insertPostTag(postId, tagId);
-//                    }
-//                });
             }
         }
-
-
     /**
      * 更新帖子  仅包含删除标签
      */
     @Override
-    public void updatePost(UpdateDto updateDto) {
+    public void updatePost(UpdateDTO updateDto) {
         logger.info("PostServiceImpl.updatePost()");
         postMapper.updatePost(updateDto);
 
@@ -104,20 +89,9 @@ public class PostServiceImpl implements PostService {
                     postMapper.deletePostTags(postId, tagName);
 
             });
-//        if (deleteTags != null && !deleteTags.isEmpty()) {
-//            deleteTags.forEach(tagName -> {
-//                Long tagId = postMapper.selectTagId(tagName);
-//                if (tagId != null) {
-//                    postMapper.deletePostTags(Long.parseLong(postId), tagId);
-//                }
-//            });
-//        }
-        //查询标签库中某个标签的Id 插入标签
-//        List<Long> tagIds = selectedTags.stream()
-//                .map(tagName -> postMapper.selectTagId(tagName))
-        //添加标签
-        if (updateDto.getAddtags() != null && !updateDto.getAddtags().isEmpty()) {
-            updateDto.getAddtags().forEach(tagName  -> {
+
+        if (updateDto.getTags() != null && !updateDto.getTags().isEmpty()) {
+            updateDto.getTags().forEach(tagName  -> {
                 if (tagName == null) {
                     postMapper.insertPostTag(postId, tagName);
                 }

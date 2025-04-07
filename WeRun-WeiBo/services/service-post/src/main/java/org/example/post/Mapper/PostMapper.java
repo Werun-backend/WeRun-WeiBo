@@ -2,28 +2,25 @@ package org.example.post.Mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.example.post.POJO.DTO.PostDTO;
-import org.example.post.POJO.DTO.UpdateDto;
-import org.example.post.POJO.PO.PostPO;
+import org.example.post.POJO.DTO.UpdateDTO;
 
 import java.util.List;
 
 @Mapper
 public interface PostMapper {
         // 插入帖子
-        @Insert("INSERT INTO post (uuid, title, content, createTime, updateTime ,schedule,authorId" +
-                "VALUES (#{uuid}, #{title}, #{content}, #{createTime}, #{updateTime},#{schedule},#{authorId})")
+        @Insert("INSERT INTO post (uuid, title, content,schedule,author_id,schedule) VALUES (#{uuid}, #{title}, #{content},#{schedule},#{authorId},#{schedule})")
         void insertPost(PostDTO postDTO);
         //更新帖子
-        @Update("UPDATE post SET title = #{title}, content = #{content}, updateTime = #{updateTime} WHERE uuid = #{uuid}")
-        void updatePost(UpdateDto updateDto);
-
+        @Update("UPDATE post SET title = #{title}, content = #{content} WHERE uuid = #{uuid}")
+        void updatePost(UpdateDTO updateDto);
         //删除帖子
         @Delete("DELETE FROM post WHERE uuid = #{uuid}")
-        @Delete("DELETE FROM post_tags WHERE uuid = #{uuid}")
+        @Delete("DELETE FROM post_tags WHERE post_id = #{uuid}")
         void deletePost(String uuid);
 
         //展示所有标签
-        @Select("SELECT * FROM tags")
+        @Select("SELECT * FROM post_tags")
         List<String> selectTags();
 
 //        // 插入标签 主键自增 返回id
@@ -35,16 +32,12 @@ public interface PostMapper {
 //        Long selectTagId(@Param("tagname") String tagname);
 
         // 插入帖子标签关联
-        @Insert("INSERT INTO post_tags (postId, tagname) VALUES (#{postid}, #{tagname})")
+        @Insert("INSERT INTO post_tags (post_id, tagname) VALUES (#{postid}, #{tagname})")
         void insertPostTag(@Param("postid") String postid, @Param("tagname")String tagname);
 
         //删除 帖子关联标签
-        @Delete("DELETE FROM post_tags WHERE postId = #{postid} AND tagname = #{tagname}")
+        @Delete("DELETE FROM post_tags WHERE post_id = #{postid} AND tagname = #{tagname}")
         void deletePostTags(@Param("postid") String postid, @Param("tagname")String tagname );
-
-//        //修改帖子关联标签
-//        @Update("UPDATE post_tags SET tagid = #{tagid} WHERE postid = #{postid}")
-//        void updatePostTags(@Param("postid") Long postid, @Param("tagid") Long tagid);
 
         // 查询帖子
         @Select("SELECT * FROM post WHERE uuid = #{uuid}")

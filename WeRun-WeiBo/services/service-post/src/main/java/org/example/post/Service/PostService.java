@@ -2,11 +2,8 @@ package org.example.post.Service;
 
 
 import org.example.post.POJO.DTO.PostDTO;
-import org.example.post.POJO.DTO.UpdateDto;
-import org.example.post.POJO.PO.PostPO;
+import org.example.post.POJO.DTO.UpdateDTO;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 
@@ -19,7 +16,7 @@ public interface PostService {
 //
 //    void insertPostTag(Long postid, Long tagid);
 
-    void updatePost(UpdateDto updateDto);
+    void updatePost(UpdateDTO updateDto);
     //    void insertTag(String tagname);
 //    void selectTagId(String tagname);
 //    void deletePostTag(Long postid, Long tagid);

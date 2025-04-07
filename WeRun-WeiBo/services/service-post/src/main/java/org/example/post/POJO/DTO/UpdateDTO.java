@@ -6,11 +6,11 @@ import java.util.Set;
 import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
-public class UpdateDto {
+public class UpdateDTO {
     private String uuid;
     private String title;
     private String content;
     private Set<String> deletetags;
-    private Set<String> addtags;
+    private Set<String> Tags;
     private LocalDateTime updatedate;
 }

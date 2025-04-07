@@ -1,12 +1,9 @@
 package org.example.post.Controller;
 
 import org.example.post.POJO.DTO.PostDTO;
-import org.example.post.POJO.DTO.UpdateDto;
-import org.example.post.POJO.PO.PostPO;
+import org.example.post.POJO.DTO.UpdateDTO;
 import org.example.post.Service.PostService;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequestMapping("weibo/editPost")
 @RestController
@@ -22,11 +19,11 @@ public class PostController {
     }
 
     @PostMapping("/update")
-    public void updatePost(@RequestBody UpdateDto updateDto) {
+    public void updatePost(@RequestBody UpdateDTO updateDto) {
         postService.updatePost(updateDto);
     }
 
-    @DeleteMapping("/daleta")
+    @DeleteMapping("/delete")
     public void deletePost(@PathVariable String uuid) {
         postService.deletePost(uuid);
         }
