@@ -1,9 +1,9 @@
-package org.example.post.serviceimpl;
+package org.example.post.Service.impl;
 
-import org.example.post.mapper.PostMapper;
-import org.example.post.pojo.PO.PostPO;
-import org.example.post.service.PostService;
-import org.example.post.service.ScheduleService;
+import org.example.post.POJO.DTO.PostDTO;
+import org.example.post.POJO.PO.PostPO;
+import org.example.post.Service.PostService;
+import org.example.post.Service.ScheduleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,26 +17,24 @@ import java.util.Set;
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
 
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
-
-    @Autowired
-    private PostService postService;
-    //添加定时任务
+    private final RedisTemplate<String, String> redisTemplate;
+    private final PostService postService;
+    public ScheduleServiceImpl(RedisTemplate<String, String> redisTemplate, PostService postService) {
+        this.redisTemplate = redisTemplate;
+        this.postService = postService;
+    }
     Logger logger = LoggerFactory.getLogger(ScheduleServiceImpl.class);
     @Override
-    public void schedulePost(PostPO postPO,List<String> newtags,List<String> selectedTags,long executeTime) {
-        logger.debug("正在进行定时发布工作，现在在用redis缓存数据");
-        redisTemplate.opsForZSet().add("post", postPO.getUuid(), executeTime);
-
+    public void schedulePost(PostDTO postDTO, long executeTime) {
+        logger.debug("正在进行帖子定时发布工作，现在在用redis缓存数据");
+        redisTemplate.opsForZSet().add("post", postDTO.getUuid(), executeTime);
         //储存信息
-        if (newtags != null && !newtags.isEmpty()) {
-            redisTemplate.opsForList().rightPushAll("tags:new:" + postPO.getUuid(), newtags);
+        if (postDTO.getTags() != null && !postDTO.getTags().isEmpty()) {
+            redisTemplate.opsForList().rightPushAll("tags:new:" + postDTO.getUuid(), postDTO.getTags());
         }
-        if (selectedTags != null && !selectedTags.isEmpty()) {
-            redisTemplate.opsForList().rightPushAll("tags:selected:" + postPO.getUuid(), selectedTags);
+        if (postDTO.getTags() != null && !postDTO.getTags().isEmpty()) {
+            redisTemplate.opsForList().rightPushAll("tags:selected:" + postDTO.getUuid(), postDTO.getTags());
         }
-
     }
     @Override
     @Scheduled(fixedRate = 1000)

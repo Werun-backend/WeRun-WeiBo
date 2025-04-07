@@ -1,35 +1,40 @@
-package org.example.post.serviceimpl;
+package org.example.post.Service.impl;
 
-import lombok.extern.slf4j.Slf4j;
-import org.example.post.mapper.SearchPostMapper;
-import org.example.post.pojo.PO.PostPO;
-import org.example.post.service.SearchService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.example.post.Mapper.SearchPostMapper;
+import org.example.post.POJO.PO.PostPO;
+import org.example.post.POJO.VO.PageResult;
+import org.example.post.Service.SearchService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
-@Slf4j
 public class SearchServiceImpl implements SearchService {
-    @Autowired
-    public SearchPostMapper searchPostMapper;
+
+    private final SearchPostMapper searchPostMapper;
+
+    public SearchServiceImpl(SearchPostMapper searchPostMapper) {
+        this.searchPostMapper = searchPostMapper;
+    }
+    Logger logger = LoggerFactory.getLogger(SearchServiceImpl.class);
     //根据关键词查询
     @Override
     public PageResult<PostPO> searchPosts(String keyword, int page, int pageSize) {
-            log.debug("正在进行搜索帖子服务");
+            logger.debug("正在进行搜索帖子服务");
         if (page <= 0 || pageSize <= 0) {
             // 如果页码或页面大小小于等于0，则抛出异常
-            log.error("帖子分页发生错误");
+            logger.error("帖子分页发生错误");
             throw new IllegalArgumentException("Page and pageSize must be greater than 0");
         }
         try {
-            log.debug("正在从DAO层获取数据");
+            logger.debug("正在从DAO层获取数据");
             List<PostPO> list = searchPostMapper.searchPosts(keyword);
-            log.debug("数据获取完成");
+            logger.debug("数据获取完成");
             int total = list.size();
             return new PageResult<>(total, list, page, pageSize);
         } catch (Exception e) {
-            log.error("Error occurred while fetching user posts", e);
+            logger.error("Error occurred while fetching user posts", e);
             throw new RuntimeException("Failed to fetch user posts", e);
         }
 
@@ -41,18 +46,18 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public PageResult<PostPO> searchPostsByTag(String tagName, int page, int pageSize){
         if (page <= 0 || pageSize <= 0) {
-            log.error("帖子分页发送错误");
+            logger.error("帖子分页发送错误");
             // 如果页码或页面大小小于等于0，则抛出异常
             throw new IllegalArgumentException("Page and pageSize must be greater than 0");
         }
         try {
-            log.debug("正在从DAO层获取数据，利用tag");
+            logger.debug("正在从DAO层获取数据，利用tag");
             List<PostPO> list = searchPostMapper.searchPostsByTag(tagName);
             int total = list.size();
             return new PageResult<>(total, list, page, pageSize);
 
         } catch (Exception e) {
-            log.error("Error occurred while fetching user posts", e);
+            logger.error("Error occurred while fetching user posts", e);
             throw new RuntimeException("Failed to fetch user posts", e);
         }
         }

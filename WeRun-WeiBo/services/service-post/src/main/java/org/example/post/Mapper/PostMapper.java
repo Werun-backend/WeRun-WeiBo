@@ -1,8 +1,9 @@
-package org.example.post.mapper;
+package org.example.post.Mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.example.post.pojo.DTO.UpdateDto;
-import org.example.post.pojo.PO.PostPO;
+import org.example.post.POJO.DTO.PostDTO;
+import org.example.post.POJO.DTO.UpdateDto;
+import org.example.post.POJO.PO.PostPO;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface PostMapper {
         // 插入帖子
         @Insert("INSERT INTO post (uuid, title, content, createtime, updatetime ，schedule" +
                 "VALUES (#{uuid}, #{title}, #{content}, #{createTime}, #{updateTime},#{schedule})")
-        void insertPost(PostPO postPO);
+        void insertPost(PostDTO postPO);
         //更新帖子
         @Update("UPDATE post SET title = #{title}, content = #{content}, updatetime = #{updateTime} WHERE uuid = #{uuid}")
         void updatePost(UpdateDto updateDto);

@@ -1,10 +1,8 @@
-package org.example.post.service;
+package org.example.post.Service;
 
-import org.example.post.pojo.PO.PostPO;
-import org.example.post.serviceimpl.PageResult;
+import org.example.post.POJO.PO.PostPO;
+import org.example.post.POJO.VO.PageResult;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public interface SearchService {

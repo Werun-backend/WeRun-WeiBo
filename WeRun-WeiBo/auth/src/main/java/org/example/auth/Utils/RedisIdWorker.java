@@ -13,13 +13,16 @@ import java.time.format.DateTimeFormatter;
  * Redis分布式ID生成器
  * 用于生成全局唯一的ID，通过Redis来保证同一时间同一前缀的ID不重复
  */
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @Component
 public class RedisIdWorker {
     // 开始时间戳，用于计算偏移量
     private static final long BEGIN_TIMESTAMP = 1739933334L;
     // Redis模板，用于操作Redis
     private final StringRedisTemplate stringRedisTemplate;
+
+    public RedisIdWorker(StringRedisTemplate stringRedisTemplate) {
+        this.stringRedisTemplate = stringRedisTemplate;
+    }
 
     /**
      * 生成下一个ID

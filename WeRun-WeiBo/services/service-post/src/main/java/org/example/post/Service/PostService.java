@@ -1,10 +1,9 @@
-package org.example.post.service;
+package org.example.post.Service;
 
 
-import org.example.post.mapper.PostMapper;
-import org.example.post.pojo.DTO.UpdateDto;
-import org.example.post.pojo.PO.PostPO;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.example.post.POJO.DTO.PostDTO;
+import org.example.post.POJO.DTO.UpdateDto;
+import org.example.post.POJO.PO.PostPO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,14 +12,14 @@ import java.util.List;
 
 public interface PostService {
 
-    void publishPost(PostPO postPo, List<String> newtags, List<String> selectedtags);
+    void publishPost(PostDTO postDTO);
 //    void insertTag(String tagname);
 //
 //    void selectTagId(String tagname);
 //
 //    void insertPostTag(Long postid, Long tagid);
 
-    void updatePost(UpdateDto updateDto, List<String> deletetags, List<String> newtags, List<String> selectedtags);
+    void updatePost(UpdateDto updateDto, List<String> deleteTags, List<String> newTags, List<String> selectedTags);
     //    void insertTag(String tagname);
 //    void selectTagId(String tagname);
 //    void deletePostTag(Long postid, Long tagid);

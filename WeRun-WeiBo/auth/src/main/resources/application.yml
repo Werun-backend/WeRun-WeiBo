@@ -38,5 +38,4 @@ spring:
             client-id: Ov23li1VgdcfCCkPne5i
             client-secret: 38205fdf4a46ab93958af743309202f266673117
 logging:
-  level:
-    org.springframework.security: debug
+  level.web: debug

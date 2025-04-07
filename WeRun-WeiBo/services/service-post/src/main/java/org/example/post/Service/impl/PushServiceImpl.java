@@ -1,8 +1,9 @@
-package org.example.post.serviceimpl;
+package org.example.post.Service.impl;
 
-import org.example.post.mapper.PushPostMapper;
-import org.example.post.pojo.PO.PostPO;
-import org.example.post.service.PushService;
+import org.example.post.Mapper.PushPostMapper;
+import org.example.post.POJO.PO.PostPO;
+import org.example.post.POJO.VO.PageResult;
+import org.example.post.Service.PushService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

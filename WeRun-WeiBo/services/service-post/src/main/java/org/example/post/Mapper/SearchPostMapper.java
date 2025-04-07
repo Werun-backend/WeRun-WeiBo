@@ -1,8 +1,8 @@
-package org.example.post.mapper;
+package org.example.post.Mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
-import org.example.post.pojo.PO.PostPO;
+import org.example.post.POJO.PO.PostPO;
 
 import java.util.List;
 
