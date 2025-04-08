@@ -85,7 +85,7 @@ public class LoginController {
     }
 
     @GetMapping("/login/github")
-    public BaseResult<Object> loginByGithub(Model model, @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient,
+    public BaseResult<Object> loginByGithub(Model model, @RegisteredOAuth2AuthorizedClient(registrationId = "github") OAuth2AuthorizedClient authorizedClient,
                             @AuthenticationPrincipal OAuth2User oauth2User) {
             model.addAttribute("userName", oauth2User.getName());
             model.addAttribute("clientName", authorizedClient.getClientRegistration().getClientName());

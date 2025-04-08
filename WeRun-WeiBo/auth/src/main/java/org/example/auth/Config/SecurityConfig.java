@@ -6,6 +6,8 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.savedrequest.NullRequestCache;
 
@@ -18,8 +20,6 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(
                         authorize -> authorize
-                                .requestMatchers("/Oss")
-                                .authenticated()
                                 .anyRequest()
                                 .permitAll()
                 )
@@ -35,5 +35,9 @@ public class SecurityConfig {
                                 .requestCache(new NullRequestCache()))
                 .anonymous(AbstractHttpConfigurer::disable);
         return http.build();
+    }
+    @Bean
+    public JwtDecoder jwtDecoder() {
+        return NimbusJwtDecoder.withJwkSetUri("http://localhost:8080/auth/realms/WeRun/protocol/openid-connect/certs").build();
     }
 }

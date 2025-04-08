@@ -14,6 +14,6 @@ public interface SearchPostMapper {
     List<PostPO> searchPosts(String keyword);
 
     //根据输入的标签查询帖子
-    @Select("SELECT p.* FROM post p JOIN post_tags pt ON p.id = pt.post_id WHERE pt.tagname LIKE CONCAT('%', #{tagname}, '%')")
+    @Select("SELECT p.* FROM post p JOIN post_tags pt ON p.uuid = pt.post_id WHERE pt.tagname LIKE CONCAT('%', #{tagname}, '%')")
     List<PostPO> searchPostsByTag(@Param("tagname") String tagname);
 }

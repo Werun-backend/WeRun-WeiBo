@@ -29,7 +29,8 @@ spring:
   mail:
     username: 3221834658@qq.com
     password: dtortzhxcjeochhf
-    host: smtp.qq.com+
+    host: smtp.qq.com
+    port: 465
   security:
     oauth2:
       client:
@@ -37,5 +38,9 @@ spring:
           github:
             client-id: Ov23li1VgdcfCCkPne5i
             client-secret: 38205fdf4a46ab93958af743309202f266673117
+            redirect-uri: http://localhost:9010/login/oauth2/code/github
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9010/auth/realms/WeRun/protocol/openid-connect/certs
 logging:
   level.web: debug

@@ -8,6 +8,6 @@ import java.util.List;
 @Mapper
 public interface PushPostMapper {
     //查询所有帖子并按照时间顺序排序
-    @Select("SELECT * FROM post ORDER BY createTime DESC")
+    @Select("SELECT * FROM post ORDER BY create_time DESC")
     List<PostPO> selectAllPosts();
 }

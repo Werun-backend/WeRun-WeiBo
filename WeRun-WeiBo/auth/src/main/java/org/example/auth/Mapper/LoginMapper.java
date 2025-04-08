@@ -26,5 +26,5 @@ public interface LoginMapper {
     @Update("update WeiBo.Users set Password = #{Password} where Email = #{Email} and Phone =#{Phone}")
     void ResetPassword(ResetPO resetPO);
     @Select("select count(*) from WeiBo.Users where Phone = #{Phone} or Email = #{Email}")
-    int checkUnique( String phone, String email);
+    int checkUnique(String phone, String email);
 }

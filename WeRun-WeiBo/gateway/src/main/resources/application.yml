@@ -31,3 +31,6 @@ spring:
 #              user-info-uri: http://localhost:9010/auth/oauth/userinfo
 server:
   port: 8080
+logging:
+  level:
+    web: debug
