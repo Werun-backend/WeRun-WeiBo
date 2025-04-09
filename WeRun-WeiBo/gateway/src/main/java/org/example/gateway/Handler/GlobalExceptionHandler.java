@@ -1,8 +1,8 @@
-package org.example.auth.Handler;
+package org.example.gateway.Handler;
 
 
-import org.example.common.model.global.BaseResult;
-import org.example.common.model.global.HttpStatus;
+import org.example.gateway.Utils.BaseResult;
+import org.example.gateway.Utils.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;

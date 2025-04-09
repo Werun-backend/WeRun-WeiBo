@@ -1,7 +1,7 @@
 package org.example.post.Service.impl;
 
 import org.example.post.Mapper.UserPostMapper;
-import org.example.post.POJO.PO.PostPO;
+import org.example.post.POJO.BO.PostBO;
 import org.example.post.POJO.VO.PageResult;
 import org.example.post.Service.UserPostService;
 import org.slf4j.Logger;
@@ -20,7 +20,7 @@ public class UserPostServiceImpl implements UserPostService {
     }
     Logger logger = LoggerFactory.getLogger(UserPostServiceImpl.class);
     @Override
-    public PageResult<PostPO> getUserPosts(String authid, int page, int pageSize) {
+    public PageResult<PostBO> getUserPosts(String authid, int page, int pageSize) {
         // 记录方法进入日志
         logger.info("进入按照用户名称查询帖子的操作,用户的ID: {}, page: {}, pageSize: {}", authid, page, pageSize);
         // 参数校验
@@ -37,7 +37,7 @@ public class UserPostServiceImpl implements UserPostService {
             // 计算偏移量
             int offset = (page - 1) * pageSize;
             // 查询用户帖子及总数
-            List<PostPO> list = userPostMapper.selectUserPosts(authid, offset, pageSize);
+            List<PostBO> list = userPostMapper.selectUserPosts(authid, offset, pageSize);
             logger.info("查询到帖子:{}",list);
             int total = userPostMapper.countUserPosts(authid);
             // 返回分页结果

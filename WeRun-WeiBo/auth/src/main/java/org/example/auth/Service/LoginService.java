@@ -11,11 +11,11 @@ import java.io.IOException;
 public interface LoginService {
     LoginVO login(@Valid LoginDTO loginDTO);
 
-    void logout(String jwt);
+    void logout(String token);
 
     void register(@Valid RegisterDTO registerDTO, MultipartFile file) throws IOException;
 
-    void mLogin(@Valid MLoginDTO mloginDTO);
+    void mLogin(String Email);
 
     LoginVO LoginByCode(@Valid CheckEmailBO l);
 

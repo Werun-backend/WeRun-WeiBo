@@ -1,5 +1,6 @@
 package org.example.gateway.config;
 
+import io.jsonwebtoken.Claims;
 import org.example.gateway.Utils.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,8 +43,8 @@ public class GatewayConfig implements GlobalFilter {
         logger.debug("黑名单检测完成");
         try {
             logger.debug("尝试解析JWT令牌");
-            JwtUtils.parseJWT(jwt);
-            logger.debug("解析完成，但是不返回任何结果");
+            Claims claims = JwtUtils.parseJWT(jwt);
+            logger.debug("解析完成，返回结果:{}",claims);
         return chain.filter(exchange);
     } catch (Exception e) {
             logger.error("出现意料之外的错误");

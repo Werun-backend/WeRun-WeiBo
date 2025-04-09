@@ -2,12 +2,12 @@ package org.example.post.Service;
 
 
 import org.example.post.POJO.DTO.PostDTO;
+import org.example.post.POJO.PO.PostPO;
 import org.example.post.POJO.DTO.UpdateDTO;
-import org.springframework.stereotype.Service;
 
 public interface PostService {
 
-    void publishPost(PostDTO postDTO);
+    void publishPost(PostPO postPO);
 //    void insertTag(String tagname);
 //
 //    void selectTagId(String tagname);
@@ -21,4 +21,5 @@ public interface PostService {
     void deletePost(String uuid);
 
 
+    PostPO assemblePO(PostDTO postDTO, String token);
 }

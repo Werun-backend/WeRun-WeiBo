@@ -5,12 +5,9 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 @Data
 @AllArgsConstructor
 public class PostDTO {
-    private String uuid;
-    private String authorId;
     private String title;
     private String content;
     private Integer schedule;

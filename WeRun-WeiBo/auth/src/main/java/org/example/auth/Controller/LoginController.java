@@ -1,12 +1,16 @@
 package org.example.auth.Controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.example.auth.POJO.BO.CheckEmailBO;
 import org.example.auth.POJO.DTO.*;
 import org.example.auth.POJO.VO.LoginVO;
 import org.example.auth.Service.LoginService;
 import org.example.common.model.global.BaseResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
@@ -22,6 +26,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class LoginController {
     private final LoginService loginService;
+    Logger logger = LoggerFactory.getLogger(LoginController.class);
     @PostMapping("/login/common")
     public BaseResult<Object> login(@RequestBody @Valid LoginDTO loginDTO) {
         //校验登录
@@ -29,17 +34,21 @@ public class LoginController {
         try {
             loginVO = loginService.login(loginDTO);
         } catch (Exception e) {
-            return BaseResult.error("用户名或者密码错误");
+            logger.error("发生错误:{}",e.getMessage());
+            return BaseResult.error("密码错误");
         }
         return BaseResult.success("登录成功", loginVO.getToken());
     }
-    @PostMapping("/login/emailSend")
-    public BaseResult<Object> mailLogin(@RequestBody @Valid MLoginDTO mloginDTO) {
-        //校验登录
-
+    @GetMapping("/login/emailSend")
+    public BaseResult<Object> mailLogin(@NotNull @Pattern(regexp = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$",
+            message = "请填入正确的邮箱的格式")String Email) {
+        //校验登录//    @NotNull(message = "邮箱不能为空")
+        //
+        logger.debug("传入参数:{}",Email);
         try {
-            loginService.mLogin(mloginDTO);
+            loginService.mLogin(Email);
         } catch (Exception e) {
+            logger.error("发生错误:{}",e.getMessage());
             return BaseResult.error("邮箱验证码发送错误");
         }
         return BaseResult.success("发送成功", null);
@@ -51,14 +60,15 @@ public class LoginController {
         try {
             loginVO = loginService.LoginByCode(l);
         } catch (Exception e) {
-            return BaseResult.error("验证码错误或无效");
+            logger.error("发生了错误:{}",e.getMessage());
+            return BaseResult.error("验证码错误",null);
         }
         return BaseResult.success("登录成功", loginVO.getToken());
     }
     @PostMapping("/logout")
-    public BaseResult<Object> logout(@RequestHeader(value = "Authorization") String jwt) {
-        loginService.logout(jwt);
-        return BaseResult.success("退出成功", jwt);
+    public BaseResult<Object> logout(@RequestHeader(value = "Authorization") String token) {
+        loginService.logout(token);
+        return BaseResult.success("退出成功", token);
     }
 
     @PostMapping("/register/sendCode")

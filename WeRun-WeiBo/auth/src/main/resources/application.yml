@@ -27,10 +27,9 @@ spring:
           min-idle: 0
           max-wait: 10000ms
   mail:
-    username: 3221834658@qq.com
-    password: dtortzhxcjeochhf
-    host: smtp.qq.com
-    port: 465
+    username: A19861577050@126.com
+    password: VRv3uuraf5zb32Uf
+    host: smtp.126.com
   security:
     oauth2:
       client:
@@ -43,4 +42,5 @@ spring:
         jwt:
           jwk-set-uri: http://localhost:9010/auth/realms/WeRun/protocol/openid-connect/certs
 logging:
-  level.web: debug
+  level:
+    org.example.auth: debug

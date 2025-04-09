@@ -1,17 +1,15 @@
 package org.example.post.Mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.example.post.POJO.DTO.PostDTO;
+import org.example.post.POJO.PO.PostPO;
 import org.example.post.POJO.DTO.UpdateDTO;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Mapper
 public interface PostMapper {
         // 插入帖子
         @Insert("INSERT INTO post (uuid, title, content,schedule,author_id) VALUES (#{uuid}, #{title}, #{content},#{schedule},#{authorId})")
-        void insertPost(PostDTO postDTO);
+        void insertPost(PostPO postPO);
         //更新帖子
         @Update("UPDATE post SET title = #{title}, content = #{content} WHERE uuid = #{uuid}")
         void updatePost(UpdateDTO updateDto);
