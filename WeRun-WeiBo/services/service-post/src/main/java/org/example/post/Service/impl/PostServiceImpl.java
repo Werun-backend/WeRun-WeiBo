@@ -132,7 +132,7 @@ public class PostServiceImpl implements PostService {
         map.put("tags", postPO.getTags());
         JwtUtils jwtUtils = new JwtUtils();
         jwtUtils.setEXPIRATION(executeTime);
-        String jwt = jwtUtils.generateToken(map);
+        String jwt = jwtUtils.generateJwt(map);
         stringRedisTemplate.opsForValue().set("post:" + postPO.getUuid(), jwt);
         if (postPO.getTags() != null && !postPO.getTags().isEmpty()) {
             stringRedisTemplate.opsForList().rightPushAll("tags:selected:" + postPO.getUuid(), postPO.getTags());

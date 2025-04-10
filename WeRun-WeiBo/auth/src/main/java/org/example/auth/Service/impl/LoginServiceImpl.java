@@ -78,9 +78,8 @@ public class LoginServiceImpl implements LoginService {
         map.put("address", oneloginBO.getAddress());
         map.put("gender", oneloginBO.getGender());
         map.put("birthday", oneloginBO.getBirthday());
-        logger.debug("完成Map集合的添加");
-        logger.debug("将用户信息放入Map集合中");
-        String jwt = JwtUtils.generateToken(map);
+        logger.debug("完成Map集合的添加：{}",map);
+        String jwt = JwtUtils.generateJwt(map);
         logger.debug("完成JWT令牌加工:{}",jwt);
         return new LoginVO(jwt);
     }

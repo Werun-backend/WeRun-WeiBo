@@ -14,30 +14,12 @@ public class JwtUtils {
     //令牌有效的时长
     private static final long EXPIRATION = 3600; // 1小时
     //生成JWT令牌
-    public static String generateToken(Map<String,Object> claims) {
+    public static String generateJwt(Map<String, Object> claims) {
         return Jwts.builder()
-                .setClaims(claims)
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION * 1000))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .addClaims(claims)
+                .signWith(SignatureAlgorithm.HS256,SECRET_KEY)
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION*1000))
                 .compact();
-    }
-
-    public static boolean validateToken(String token) {
-        try {
-            Claims claims = Jwts.parser()
-                    .setSigningKey(SECRET_KEY)
-                    .parseClaimsJws(token)
-                    .getBody();
-            return !claims.getExpiration().before(new Date());
-        } catch (Exception e) {
-            return false;
-        }
-    }
-    public static Claims parseJWT(String jwt) {
-        return Jwts.parser()
-                .setSigningKey(SECRET_KEY)
-                .parseClaimsJws(jwt)
-                .getBody();
     }
 
 }

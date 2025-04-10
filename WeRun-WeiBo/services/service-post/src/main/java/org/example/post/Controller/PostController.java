@@ -4,6 +4,8 @@ import org.example.post.POJO.DTO.PostDTO;
 import org.example.post.POJO.PO.PostPO;
 import org.example.post.POJO.DTO.UpdateDTO;
 import org.example.post.Service.PostService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/post/editPost")
@@ -14,8 +16,10 @@ public class PostController {
     public PostController(PostService postService) {
         this.postService = postService;
     }
+    Logger logger = LoggerFactory.getLogger(PostController.class);
     @PostMapping("/insert")
     public void insertPost(@RequestBody PostDTO postDTO,@RequestHeader("Authorization") String token){
+        logger.debug("开始进行PO创建,DTO为: {}", postDTO);
         PostPO postPO = postService.assemblePO(postDTO, token);
         postService.publishPost(postPO);
     }
