@@ -13,5 +13,5 @@ public interface SearchService {
 
     PostVO searchPostsById(String uuid);
 
-    boolean checkPostsById(String uuid, String authorId);
+    int checkPostsById(String uuid, String authorId);
 }

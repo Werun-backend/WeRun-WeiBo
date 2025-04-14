@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import org.example.comment.pojo.dto.CTCDTO;
 import org.example.comment.pojo.dto.CTPDTO;
 import org.example.comment.pojo.dto.ReplyDTO;
-import org.example.comment.pojo.vo.CTPVO;
+import org.example.comment.pojo.vo.CTPPlusVO;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public interface CommentService {
 
     void reply(@Valid ReplyDTO replydto, String token);
 
-    List<CTPVO> getCommentsByTime(String postId);
+    List<CTPPlusVO> getCommentsByTime(String postId);
 
     void deleteMyCommentsCTC(String commentId, String token);
 
@@ -25,5 +25,5 @@ public interface CommentService {
 
     void like(String commentId, String token);
 
-    List<CTPVO> getCommentsByLikes(String postId);
+    List<CTPPlusVO> getCommentsByLikes(String postId);
 }

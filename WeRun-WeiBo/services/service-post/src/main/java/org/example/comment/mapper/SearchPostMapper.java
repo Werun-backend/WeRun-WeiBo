@@ -18,6 +18,6 @@ public interface SearchPostMapper {
     List<PostVO> searchPostsByTag(@Param("tagname") String tagname);
     @Select("SELECT * FROM post WHERE uuid = #{uuid}")
     PostVO searchPostsById(String uuid);
-    @Select("SELECT * FROM post WHERE uuid = #{uuid} AND author_id = #{authorId}")
-    boolean checkPostsById(String uuid, String authorId);
+    @Select("SELECT count(*) FROM post WHERE uuid = #{uuid} AND author_id = #{authorId}")
+    int checkPostsById(String uuid, String authorId);
 }

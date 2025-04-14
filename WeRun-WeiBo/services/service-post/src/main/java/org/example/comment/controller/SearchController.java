@@ -28,7 +28,7 @@ public class SearchController {
         return searchService.searchPostsById(uuid);
     }
     @GetMapping("/check")
-    public boolean checkPostsById(String uuid,String authorId) {
+    public int checkPostsById(String uuid,String authorId) {
         return searchService.checkPostsById(uuid,authorId);
     }
 }

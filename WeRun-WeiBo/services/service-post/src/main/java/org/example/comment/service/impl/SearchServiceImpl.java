@@ -67,7 +67,8 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public boolean checkPostsById(String uuid, String authorId) {
+    public int checkPostsById(String uuid, String authorId) {
+        logger.debug("正在检查帖子");
         return searchPostMapper.checkPostsById(uuid,authorId);
     }
 }

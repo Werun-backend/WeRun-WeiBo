@@ -8,6 +8,7 @@ import org.example.comment.pojo.dto.ReplyDTO;
 import org.example.comment.pojo.po.CTCPO;
 import org.example.comment.pojo.po.CTPPO;
 import org.example.comment.pojo.po.ReplyPO;
+import org.example.comment.pojo.vo.CTPPlusVO;
 import org.example.comment.pojo.vo.CTPVO;
 import org.example.comment.service.CommentService;
 import org.example.comment.utils.JwtUtils;
@@ -16,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -63,13 +65,15 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CTPVO> getCommentsByTime(String postId) {
+    public List<CTPPlusVO> getCommentsByTime(String postId) {
         List<CTPVO> ctpvo = commentMapper.getCTP(postId);
         logger.debug("查询到的评论为:{}",ctpvo);
+        List<CTPPlusVO> list = new ArrayList<>();
         for(CTPVO actpvo:ctpvo){
-            actpvo.setComments(commentMapper.getCTC(actpvo.getCommentId()));
+            CTPPlusVO ctpPlusVO = new CTPPlusVO(actpvo.getCommentId(), postId, actpvo.getUserId(), actpvo.getContent(), actpvo.getReplyNum(), actpvo.getIsLiked(), actpvo.getCreateTime(), commentMapper.getCTC(actpvo.getCommentId()));
+            list.add(ctpPlusVO);
         }
-        return ctpvo;
+        return list;
     }
 
     @Override
@@ -86,7 +90,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void deleteUnderPost(String postId, String commentId,String token) {
-        if(!findPostClient.checkPostsById(postId,JwtUtils.getUserId(token))){
+        if(findPostClient.checkPostsById(postId,JwtUtils.getUserId(token))==0){
             logger.error("你没有权限删除这个帖子");
             throw new RuntimeException("删除错误");
         }
@@ -101,12 +105,14 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CTPVO> getCommentsByLikes(String postId) {
+    public List<CTPPlusVO> getCommentsByLikes(String postId) {
         List<CTPVO> ctpvo = commentMapper.getCTPByLikes(postId);
         logger.debug("查询到的评论为:{}",ctpvo);
+        List<CTPPlusVO> list = new ArrayList<>();
         for(CTPVO actpvo:ctpvo){
-            actpvo.setComments(commentMapper.getCTC(actpvo.getCommentId()));
+            CTPPlusVO ctpPlusVO = new CTPPlusVO(actpvo.getCommentId(), postId, actpvo.getUserId(), actpvo.getContent(), actpvo.getReplyNum(), actpvo.getIsLiked(), actpvo.getCreateTime(), commentMapper.getCTC(actpvo.getCommentId()));
+            list.add(ctpPlusVO);
         }
-        return ctpvo;
+        return list;
     }
 }

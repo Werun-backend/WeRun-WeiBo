@@ -1,14 +1,15 @@
 package org.example.comment.pojo.vo;
 
-import java.util.Date;
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.Date;
+import java.util.List;
+
 @Data
 @AllArgsConstructor
-public class CTPVO {
+
+public class CTPPlusVO {
     private String commentId;
     private String postId;
     private String userId;
@@ -16,5 +17,5 @@ public class CTPVO {
     private int replyNum;
     private int isLiked;
     private Date createTime;
-//    private List<CTCVO> comments;
+    private List<CTCVO> comments;
 }

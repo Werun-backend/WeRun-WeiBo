@@ -8,5 +8,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient("service-post")
 public interface FindPostClient {
     @GetMapping("/post/search/check")
-    boolean checkPostsById(@RequestParam("uuid") String uuid,@RequestParam("authorId") String authorId);
+    int checkPostsById(@RequestParam("uuid") String uuid,@RequestParam("authorId") String authorId);
 }

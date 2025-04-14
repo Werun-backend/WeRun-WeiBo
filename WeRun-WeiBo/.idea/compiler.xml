@@ -8,10 +8,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="service-friend" />
-        <module name="service-post" />
         <module name="common" />
         <module name="auth" />
         <module name="service-user" />
+        <module name="service-post" />
+        <module name="service-comment" />
         <module name="gateway" />
       </profile>
     </annotationProcessing>
@@ -22,6 +23,7 @@
       <module name="auth" options="-parameters" />
       <module name="common" options="-parameters" />
       <module name="gateway" options="-parameters" />
+      <module name="service-comment" options="-parameters" />
       <module name="service-friend" options="-parameters" />
       <module name="service-post" options="-parameters" />
       <module name="service-user" options="-parameters" />
