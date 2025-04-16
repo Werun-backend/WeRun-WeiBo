@@ -41,4 +41,6 @@ public interface CommentMapper {
     List<CTPVO> getCTPByLikes(String postId);
     @Select("select post_id from CTP where comment_id = #{postedCommentId}")
     String getPostId(@NotNull(message = "正确指定所发的评论") String postedCommentId);
+    @Select("select count(*) from is_like where comment_id = #{commentId} and user_id = #{userId}")
+    int checkLike(String commentId, String userId);
 }

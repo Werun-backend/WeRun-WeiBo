@@ -75,16 +75,15 @@ public class CommentServiceImpl implements CommentService {
         }
         return list;
     }
-
     @Override
     public void deleteMyCommentsCTC(String commentId, String token) {
-        logger.debug("正在进行对评论删除操作，评论id为:{}",commentId);
+        logger.debug("正在进行对自己的对别人的评论评论删除操作，评论id为:{}",commentId);
         commentMapper.deleteCTC(commentId,JwtUtils.getUserId(token));
     }
 
     @Override
     public void deleteMyCommentsCTP(String commentId, String token) {
-        logger.debug("正在进行对评论删除操作，评论id为:{}",commentId);
+        logger.debug("正在进行对自己对帖子的评论删除操作，评论id为:{}",commentId);
         commentMapper.deleteCTP(commentId,JwtUtils.getUserId(token));
     }
 
@@ -99,6 +98,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void like(String commentId, String token) {
+        if(commentMapper.checkLike(commentId,JwtUtils.getUserId(token))>0){
+            logger.error("你已经点赞过了");
+            throw new RuntimeException("你已经点赞过了");
+        }
         commentMapper.like(commentId,JwtUtils.getUserId(token));
         logger.debug("点赞关系建立");
         commentMapper.addLikeNum(commentId);
