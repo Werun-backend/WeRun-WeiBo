@@ -28,7 +28,7 @@ public class LoginController {
     private final LoginService loginService;
     Logger logger = LoggerFactory.getLogger(LoginController.class);
     @PostMapping("/login/common")
-    public BaseResult<Object> login(@RequestBody @Valid LoginDTO loginDTO) {
+    public BaseResult<Object>login(@RequestBody @Valid LoginDTO loginDTO) {
         //校验登录
         LoginVO loginVO;
         try {
@@ -37,9 +37,13 @@ public class LoginController {
             logger.error("发生错误:{}",e.getMessage());
             return BaseResult.error("密码错误");
         }
-        return BaseResult.success("登录成功", loginVO.getToken());
+        //返回token和refreshToken
+        logger.debug("返回token和refreshToken:{}",loginVO.getToken());
+        logger.debug("返回token和refreshToken:{}",loginVO.getRefreshtoken());
+        LoginVO tokenVO = new LoginVO(loginVO.getToken(), loginVO.getRefreshtoken());
+        return BaseResult.success("登录成功", tokenVO );
     }
-    @GetMapping("/login/emailSend")
+    @GetMapping(":")
     public BaseResult<Object> mailLogin(@NotNull @Pattern(regexp = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$",
             message = "请填入正确的邮箱的格式")String Email) {
         //校验登录//    @NotNull(message = "邮箱不能为空")

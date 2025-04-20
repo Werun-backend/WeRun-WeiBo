@@ -60,4 +60,9 @@ public class CommentController {
         commentService.like(commentId,token);
         return BaseResult.success();
     }
+    @PostMapping("/cancellike")
+    public BaseResult<Object> cancellike(String commentId, @RequestHeader("Authorization") String token){
+        commentService.cancellike(commentId,token);
+        return BaseResult.success();
+    }
 }

@@ -33,7 +33,7 @@ public class PostServiceImpl implements PostService {
     private final RedisIdWorker redisIdWorker;
     Logger logger = LoggerFactory.getLogger(PostServiceImpl.class);
 
-    public void publishPost(PostPO postPO) {
+    public void publishPost(PostPO postPO, String token) {
         logger.debug("正在进行发布");
         if (postPO.getSchedule() == null) {
             logger.error("选择类别出现问题");
@@ -74,7 +74,7 @@ public class PostServiceImpl implements PostService {
      * 更新帖子  仅包含删除标签
      */
     @Override
-    public void updatePost(UpdateDTO updateDto) {
+    public void updatePost(UpdateDTO updateDto,String token) {
         logger.debug("现在进入更新帖子的服务");
         if(updateDto.getUpdateTime()!=null){
             logger.debug("更新时间异常");
@@ -111,7 +111,7 @@ public class PostServiceImpl implements PostService {
      * 删除帖子
      */
     @Override
-    public void deletePost(String uuid) {
+    public void deletePost(String uuid, String token) {
         logger.debug("现在进行删除帖子的操作");
         postMapper.deletePost(uuid);
         postMapper.deleteTags(uuid);
@@ -120,10 +120,19 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostPO assemblePO(PostDTO postDTO, String token) throws ParseException {
+    public PostPO assemblePO(PostDTO postDTO, String token){
+        logger.debug("开始进行帖子PO的创建");
         String jwt = token.substring(7);
+        logger.debug("获取到token");
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date parsedDate = formatter.parse(postDTO.getScheduleTime());
+        logger.debug("开始进行时间转换");
+        Date parsedDate = null;
+        try {
+            parsedDate = formatter.parse(postDTO.getScheduleTime());
+        } catch (Exception e) {
+            logger.error("时间转换出现问题");
+        }
+        logger.debug("时间转换完成");
         return new PostPO(String.valueOf(redisIdWorker.nextId("post")), (String) JwtUtils.parseJWT(jwt).get("uuid"), postDTO.getTitle(), postDTO.getContent(), postDTO.getSchedule(), parsedDate, postDTO.getTags());
     }
 

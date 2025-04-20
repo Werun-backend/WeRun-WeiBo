@@ -2,6 +2,7 @@ package org.example.comment.controller;
 
 import org.example.common.model.global.BaseResult;
 import org.example.comment.service.PushService;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,5 +19,9 @@ public class PushController {
     @RequestMapping(value = "/pushPosts")
     public BaseResult<Object> pushPosts(@RequestParam(defaultValue = "1")Integer page, @RequestParam(defaultValue = "10")Integer pageSize) {
         return BaseResult.success(pushService.pushPosts(page, pageSize));
+    }
+    @RequestMapping(value = "/pushPostsByCommentCount")
+    public BaseResult<Object> pushPostsByCommentCount(@RequestParam(defaultValue = "1")Integer page, @RequestParam(defaultValue = "10")Integer pageSize) {
+        return BaseResult.success(pushService.pushPostsByCommentCount(page, pageSize));
     }
 }

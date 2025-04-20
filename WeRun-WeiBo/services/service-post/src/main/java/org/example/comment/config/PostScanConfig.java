@@ -48,7 +48,7 @@ public class PostScanConfig {
                             2,
                             null,
                             (List<String>) claims.get("tags"));
-                    postService.publishPost(thePost);
+                    postService.publishPost(thePost,jwt);
                     logger.debug("发布帖子");
                     stringRedisTemplate.delete(taskId);
                 }

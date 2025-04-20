@@ -33,10 +33,13 @@ public class CommentServiceImpl implements CommentService {
     Logger logger = LoggerFactory.getLogger(CommentServiceImpl.class);
     @Override
     public void toPost(CTPDTO ctpdto,String token) {
-        logger.debug("正在进行对帖子评论操作，发帖传入的对象为:{},{}",ctpdto,token);
+//        logger.debug("正在进行对帖子评论操作，发帖传入的对象为:{},{}",ctpdto,token);
+        logger.debug("正在进行对帖子评论操作，评论传入的对象为:{}", token);
         CTPPO ctppo = new CTPPO(String.valueOf(redisIdWorker.nextId("CTP")), ctpdto.getPostId(), JwtUtils.getUserId(token), ctpdto.getContent());
         logger.debug("组装的帖子评论对象为:{}",ctppo);
         commentMapper.toPost(ctppo);
+        commentMapper.addCommentCount(ctppo);
+        logger.debug("帖子评论数目增加完成");
         logger.debug("帖子评论操作完成");
     }
 
@@ -104,6 +107,17 @@ public class CommentServiceImpl implements CommentService {
         }
         commentMapper.like(commentId,JwtUtils.getUserId(token));
         logger.debug("点赞关系建立");
+        commentMapper.addLikeNum(commentId);
+    }
+
+    @Override
+    public void cancellike(String commentId, String token) {
+        if(commentMapper.checkLike(commentId,JwtUtils.getUserId(token))==0){
+            logger.error("你已经取消点赞过了");
+            throw new RuntimeException("你已经取消点赞过了");
+        }
+        commentMapper.cancellike(commentId,JwtUtils.getUserId(token));
+        logger.debug("取消点赞关系");
         commentMapper.addLikeNum(commentId);
     }
 

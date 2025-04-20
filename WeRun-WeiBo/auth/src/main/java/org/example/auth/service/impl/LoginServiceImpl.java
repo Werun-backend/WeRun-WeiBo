@@ -81,7 +81,9 @@ public class LoginServiceImpl implements LoginService {
         logger.debug("完成Map集合的添加：{}",map);
         String jwt = JwtUtils.generateJwt(map);
         logger.debug("完成JWT令牌加工:{}",jwt);
-        return new LoginVO(jwt);
+        String refreshjwt = JwtUtils.generateRefreshJwt(map);
+        logger.debug("完成refreshJWT令牌加工:{}",jwt);
+        return new LoginVO(jwt,refreshjwt);
     }
 
     @Override

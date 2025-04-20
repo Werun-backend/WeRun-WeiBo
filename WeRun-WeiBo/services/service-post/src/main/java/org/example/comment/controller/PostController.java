@@ -25,19 +25,19 @@ public class PostController {
         logger.debug("开始进行PO创建,DTO为: {}", postDTO);
         PostPO postPO = postService.assemblePO(postDTO, token);
 
-        postService.publishPost(postPO);
+        postService.publishPost(postPO, token);
         return BaseResult.success();
     }
 
     @PostMapping("/update")
-    public BaseResult<Object> updatePost(@RequestBody UpdateDTO updateDto) {
-        postService.updatePost(updateDto);
+    public BaseResult<Object> updatePost(@RequestBody UpdateDTO updateDto, @RequestHeader("Authorization") String token) {
+        postService.updatePost(updateDto,token);
         return BaseResult.success();
     }
 
     @DeleteMapping("/delete")
-    public BaseResult<Object> deletePost(String uuid) {
-        postService.deletePost(uuid);
+    public BaseResult<Object> deletePost(String uuid, @RequestHeader("Authorization") String token) {
+        postService.deletePost(uuid,token);
         return BaseResult.success();
         }
 }

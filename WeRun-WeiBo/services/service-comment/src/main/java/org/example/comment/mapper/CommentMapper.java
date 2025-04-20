@@ -17,6 +17,8 @@ import java.util.List;
 public interface CommentMapper {
     @Insert("insert into CTP(comment_id,post_id,user_id,content) values(#{commentId},#{postId},#{userId},#{content})")
     void toPost(CTPPO ctppo);
+    @Update("update post set comment_count =comment_count + 1 where uuid = #{postId}")
+    void addCommentCount(CTPPO ctppo);
     @Insert("insert into CTC(comment_id,posted_comment_id,user_id,content) values(#{commentId},#{postedCommentId},#{userId},#{content})")
     void toComment(CTCPO ctcpo);
     @Insert("insert into CTC(comment_id,posted_comment_id,user_id,content,reply_id) values(#{commentId},#{postedCommentId},#{userId},#{content},#{replyId})")
@@ -36,6 +38,8 @@ public interface CommentMapper {
     @Insert("insert into is_like(comment_id,user_id) values(#{commentId},#{userId})")
     void like(String commentId, String userId);
     @Update("update CTP set is_liked = is_liked + 1 where comment_id = #{commentId}")
+    void cancellike(String commentId, String userId);
+    @Update("update CTP set is_liked = is_liked - 1 where comment_id = #{commentId}")
     void addLikeNum(String commentId);
     @Select("select comment_id, post_id, user_id, content, reply_num,is_liked, create_time  from CTP where post_id = #{postId} order by is_liked")
     List<CTPVO> getCTPByLikes(String postId);

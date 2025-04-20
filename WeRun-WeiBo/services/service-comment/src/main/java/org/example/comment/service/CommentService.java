@@ -25,5 +25,7 @@ public interface CommentService {
 
     void like(String commentId, String token);
 
+    void cancellike(String commentId, String token);
+
     List<CTPPlusVO> getCommentsByLikes(String postId);
 }

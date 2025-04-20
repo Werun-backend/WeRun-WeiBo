@@ -1,5 +1,7 @@
 package org.example.auth.utils;
 
+import io.jsonwebtoken.Claims;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -17,6 +19,14 @@ public class JwtUtils {
                 .addClaims(claims)
                 .signWith(SignatureAlgorithm.HS256,SECRET_KEY)
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION*1000))
+                .compact();
+    }
+    //生成刷新JWT令牌
+    public static String generateRefreshJwt(Map<String, Object> claims) {
+        return Jwts.builder()
+                .addClaims(claims)
+                .signWith(SignatureAlgorithm.HS256,SECRET_KEY)
+                .setExpiration(new Date(System.currentTimeMillis() + 180))
                 .compact();
     }
 

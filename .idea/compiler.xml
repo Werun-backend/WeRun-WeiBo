@@ -16,6 +16,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="service-friend" target="17" />
+      <module name="service-user" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

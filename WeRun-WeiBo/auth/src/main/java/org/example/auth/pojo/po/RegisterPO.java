@@ -13,4 +13,7 @@ public class RegisterPO {
     private String Gender;
     private String AvatarURL;
     private String uuid;
+    public String getEmail(){
+        return Email;
+    }
 }
