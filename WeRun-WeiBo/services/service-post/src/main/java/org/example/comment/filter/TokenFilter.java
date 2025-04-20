@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 
 public class TokenFilter implements Filter  {
@@ -35,8 +36,13 @@ public class TokenFilter implements Filter  {
             Claims claims = JwtUtils.parseJWT(token);
             Logger.debug("成功解析JWT令牌");
             //解析token是否过期
-            Date expiration = claims.getExpiration();
-            if (claims.getExpiration().before(new Date())) {
+            Calendar calendar = Calendar.getInstance();
+            //记录当前时间
+            calendar.setTime(new Date());
+            calendar.add(Calendar.MINUTE, -1); // 减去一分钟
+            Date oneMinuteAgo = calendar.getTime();
+            //解析refreshToken是否过期
+            if (claims.getExpiration().before(oneMinuteAgo) ){
                 //解析refeshToken是否过期
                 String refreshToken = request.getHeader("refreshToken");
                 try {
