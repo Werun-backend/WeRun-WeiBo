@@ -13,6 +13,12 @@
     <dependencies>
 
 
+        <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+        </dependency>
+
+
     </dependencies>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
