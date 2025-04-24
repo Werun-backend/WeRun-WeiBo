@@ -1,13 +1,12 @@
-package org.example.auth.Utils;
+package org.example.auth.utils;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Redis分布式ID生成器
@@ -46,7 +45,7 @@ public class RedisIdWorker {
 
         // 如果Redis中不存在该键，则初始化为0
         if (!stringRedisTemplate.hasKey(key)) {
-            stringRedisTemplate.opsForValue().set(key, "0");
+            stringRedisTemplate.opsForValue().set(key, "0",10, TimeUnit.SECONDS);
         }
 
         // 对键进行自增操作,避免时间戳之差重复

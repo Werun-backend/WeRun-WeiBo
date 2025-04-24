@@ -1,10 +1,10 @@
-package org.example.post.Service;
+package org.example.post.service;
 
-import org.example.post.POJO.BO.PostBO;
-import org.example.post.POJO.VO.PageResult;
+import org.example.post.pojo.vo.PageResult;
+import org.example.post.pojo.vo.PostVO;
 
 public interface UserPostService {
 
-    PageResult<PostBO> getUserPosts(String authid, int page, int pageSize) ;
+    PageResult<PostVO> getUserPosts(String authid, int page, int pageSize) ;
 
 }

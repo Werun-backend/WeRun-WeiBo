@@ -1,4 +1,4 @@
-package org.example.post.Config;
+package org.example.post.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

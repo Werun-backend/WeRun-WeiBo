@@ -1,15 +1,16 @@
-package org.example.auth.Service;
+package org.example.auth.service;
 
 import jakarta.validation.Valid;
-import org.example.auth.POJO.BO.CheckEmailBO;
-import org.example.auth.POJO.DTO.*;
-import org.example.auth.POJO.VO.LoginVO;
+import org.example.auth.pojo.bo.CheckEmailBO;
+import org.example.auth.pojo.dto.*;
+import org.example.auth.pojo.vo.LoginVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 public interface LoginService {
-    LoginVO login(@Valid LoginDTO loginDTO);
+    CompletableFuture<LoginVO> login(@Valid LoginDTO loginDTO);
 
     void logout(String token);
 

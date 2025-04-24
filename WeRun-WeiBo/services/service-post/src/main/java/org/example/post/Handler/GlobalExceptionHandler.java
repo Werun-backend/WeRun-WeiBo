@@ -1,4 +1,4 @@
-package org.example.post.Handler;
+package org.example.post.handler;
 
 
 import org.example.common.model.global.BaseResult;
@@ -19,7 +19,6 @@ public class GlobalExceptionHandler {
     Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
     /**
      * 拦截所有异常
-     *
      * @param e 异常对象
      * @return 返回错误响应
      */

@@ -1,4 +1,4 @@
-package org.example.auth.Utils;
+package org.example.auth.utils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

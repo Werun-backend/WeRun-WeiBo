@@ -1,9 +1,10 @@
-package org.example.post.POJO.DTO;
+package org.example.post.pojo.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.Set;
-import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 public class UpdateDTO {
@@ -12,5 +13,5 @@ public class UpdateDTO {
     private String content;
     private Set<String> deleteTags;
     private Set<String> Tags;
-    private LocalDateTime updateTime;
+    private Date updateTime;
 }

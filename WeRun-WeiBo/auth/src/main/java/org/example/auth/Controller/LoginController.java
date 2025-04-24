@@ -1,13 +1,13 @@
-package org.example.auth.Controller;
+package org.example.auth.controller;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
-import org.example.auth.POJO.BO.CheckEmailBO;
-import org.example.auth.POJO.DTO.*;
-import org.example.auth.POJO.VO.LoginVO;
-import org.example.auth.Service.LoginService;
+import org.example.auth.pojo.bo.CheckEmailBO;
+import org.example.auth.pojo.dto.*;
+import org.example.auth.pojo.vo.LoginVO;
+import org.example.auth.service.LoginService;
 import org.example.common.model.global.BaseResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/auth")
@@ -28,22 +29,12 @@ public class LoginController {
     private final LoginService loginService;
     Logger logger = LoggerFactory.getLogger(LoginController.class);
     @PostMapping("/login/common")
-    public BaseResult<Object> login(@RequestBody @Valid LoginDTO loginDTO) {
-        //校验登录
-        LoginVO loginVO;
-        try {
-            loginVO = loginService.login(loginDTO);
-        } catch (Exception e) {
-            logger.error("发生错误:{}",e.getMessage());
-            return BaseResult.error("密码错误");
-        }
-        return BaseResult.success("登录成功", loginVO.getToken());
+    public BaseResult<Object>login(@RequestBody @Valid LoginDTO loginDTO) {
+        return BaseResult.success("登录成功",loginService.login(loginDTO).join());
     }
     @GetMapping("/login/emailSend")
     public BaseResult<Object> mailLogin(@NotNull @Pattern(regexp = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$",
             message = "请填入正确的邮箱的格式")String Email) {
-        //校验登录//    @NotNull(message = "邮箱不能为空")
-        //
         logger.debug("传入参数:{}",Email);
         try {
             loginService.mLogin(Email);

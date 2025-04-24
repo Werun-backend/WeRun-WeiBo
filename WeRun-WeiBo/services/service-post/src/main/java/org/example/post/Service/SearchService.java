@@ -1,14 +1,17 @@
-package org.example.post.Service;
+package org.example.post.service;
 
-import org.example.post.POJO.BO.PostBO;
-import org.example.post.POJO.VO.PageResult;
+import org.example.post.pojo.vo.PageResult;
+import org.example.post.pojo.vo.PostVO;
 
 
 public interface SearchService {
     //根据输入的关键词u查询帖子并分页展示
-    PageResult<PostBO> searchPosts(String keyword, int page, int pageSize);
+    PageResult<PostVO> searchPosts(String keyword, int page, int pageSize);
 
     //根据标签查询帖子并分页展示
-    PageResult<PostBO> searchPostsByTag(String tagName, int page, int pageSize);
+    PageResult<PostVO> searchPostsByTag(String tagName, int page, int pageSize);
 
+    PostVO searchPostsById(String uuid);
+
+    int checkPostsById(String uuid, String authorId);
 }

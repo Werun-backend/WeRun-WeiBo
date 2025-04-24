@@ -1,4 +1,4 @@
-package org.example.auth.Handler;
+package org.example.auth.handler;
 
 
 import org.example.common.model.global.BaseResult;

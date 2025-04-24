@@ -1,4 +1,4 @@
-package org.example.auth.POJO.PO;
+package org.example.auth.pojo.po;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,4 +13,7 @@ public class RegisterPO {
     private String Gender;
     private String AvatarURL;
     private String uuid;
+    public String getEmail(){
+        return Email;
+    }
 }

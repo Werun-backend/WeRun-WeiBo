@@ -1,17 +1,17 @@
-package org.example.auth.Service.impl;
+package org.example.auth.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
-import org.example.auth.Mapper.LoginMapper;
-import org.example.auth.POJO.BO.CheckEmailBO;
-import org.example.auth.POJO.DTO.*;
+import org.example.auth.mapper.LoginMapper;
+import org.example.auth.pojo.bo.CheckEmailBO;
+import org.example.auth.pojo.dto.*;
 import org.example.common.model.user.UserBO;
-import org.example.auth.POJO.PO.RegisterPO;
-import org.example.auth.POJO.PO.ResetPO;
-import org.example.auth.POJO.VO.LoginVO;
-import org.example.auth.Service.LoginService;
-import org.example.auth.Utils.JwtUtils;
-import org.example.auth.Utils.MD5Encryptor;
-import org.example.auth.Utils.RedisIdWorker;
+import org.example.auth.pojo.po.RegisterPO;
+import org.example.auth.pojo.po.ResetPO;
+import org.example.auth.pojo.vo.LoginVO;
+import org.example.auth.service.LoginService;
+import org.example.auth.utils.JwtUtils;
+import org.example.auth.utils.MD5Encryptor;
+import org.example.auth.utils.RedisIdWorker;
 import org.example.common.model.global.AppException;
 import org.example.common.model.global.HttpStatus;
 import org.slf4j.Logger;
@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -42,14 +45,29 @@ public class LoginServiceImpl implements LoginService {
     }
     Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
     @Override
-    public LoginVO login(LoginDTO loginDTO) {
-        logger.info("现在进行登录,现在的传入的参数为:{}",loginDTO);
+    @Async
+    public CompletableFuture<LoginVO> login(LoginDTO loginDTO) {
+        return CompletableFuture.supplyAsync(()->getUserBO(loginDTO)).
+                thenApplyAsync(this::jwtMaker).
+                thenApplyAsync(this::returnToken).
+                orTimeout(5, TimeUnit.SECONDS);
+    }
+
+    private List<UserBO> getUserBO(LoginDTO loginDTO) {
+        logger.info("现在进行登录,现在的传入的参数为:{}", loginDTO);
         loginDTO.setPassword(MD5Encryptor.encryptToMD5(loginDTO.getPassword()));
         logger.debug("完成MD5算法加密");
         List<UserBO> userBO = loginMapper.login(loginDTO);
         logger.info("完成密码账号比对,获取的数据为:{}", userBO);
-        return jwtMaker(userBO);
+        return userBO;
     }
+
+    private LoginVO returnToken(LoginVO loginVO) { //返回token和refreshToken
+        logger.debug("返回token和refreshToken:{}",loginVO.getToken());
+        logger.debug("返回token和refreshToken:{}",loginVO.getRefreshtoken());
+        return new LoginVO(loginVO.getToken(), loginVO.getRefreshtoken());
+    }
+
 
     private LoginVO jwtMaker(List<UserBO> userBO) {
         logger.debug("现在进入JWT令牌的加工环节");
@@ -78,11 +96,12 @@ public class LoginServiceImpl implements LoginService {
         map.put("address", oneloginBO.getAddress());
         map.put("gender", oneloginBO.getGender());
         map.put("birthday", oneloginBO.getBirthday());
-        logger.debug("完成Map集合的添加");
-        logger.debug("将用户信息放入Map集合中");
-        String jwt = JwtUtils.generateToken(map);
+        logger.debug("完成Map集合的添加：{}",map);
+        String jwt = JwtUtils.generateJwt(map);
         logger.debug("完成JWT令牌加工:{}",jwt);
-        return new LoginVO(jwt);
+        String refreshjwt = JwtUtils.generateRefreshJwt(map);
+        logger.debug("完成refreshJWT令牌加工:{}",jwt);
+        return new LoginVO(jwt,refreshjwt);
     }
 
     @Override
@@ -104,6 +123,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
+    @Async
     public void mLogin(String Email) {
         logger.debug("现在进行邮箱登录操作");
         sendCode(Email, "code");

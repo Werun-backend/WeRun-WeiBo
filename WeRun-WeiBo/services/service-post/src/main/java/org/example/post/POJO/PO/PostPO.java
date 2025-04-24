@@ -1,9 +1,9 @@
-package org.example.post.POJO.PO;
+package org.example.post.pojo.po;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -14,6 +14,6 @@ public class PostPO {
     private String title;
     private String content;
     private Integer schedule;
-    private LocalDateTime scheduleTime;
+    private Date scheduleTime;
     private List<String> tags;
 }

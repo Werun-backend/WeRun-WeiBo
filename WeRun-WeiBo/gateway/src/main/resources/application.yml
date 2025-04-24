@@ -6,11 +6,21 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 192.168.11.128:8848
+        server-addr: 10.236.241.105:8848
         username: nacos
         password: nacos
+  data:
+    redis:
+      host: 10.236.241.105
+      port: 6379
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: 10000ms
   datasource:
-    url: jdbc:mysql://192.168.11.128:3308/nacos?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://10.236.241.105:3308/nacos?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: 123
@@ -34,3 +44,4 @@ server:
 logging:
   level:
     org.example.gateway: debug
+    org.springframework.cloud.gateway: debug

@@ -14,7 +14,7 @@ spring:
           predicates:
             - Path=/post/**
         - id: service-friend
-          uri: lb://service-friend
+          uri: lb://service-comment
           predicates:
-            - Path=/weibo/friend/**
+            - Path=/comment/**
 

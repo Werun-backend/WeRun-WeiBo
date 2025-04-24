@@ -1,9 +1,9 @@
-package org.example.post.Controller;
+package org.example.post.controller;
 
-import org.example.post.POJO.BO.PostBO;
-import org.example.post.Service.UserPostService;
-import org.example.post.POJO.VO.PageResult;
+import org.example.common.model.global.BaseResult;
+import org.example.post.service.UserPostService;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -17,8 +17,8 @@ public class UserPostController {
     }
 
     @RequestMapping("/getUserPosts")
-    public PageResult<PostBO> getUserPosts(String authid, int page, int pageSize) {
-        return userPostService.getUserPosts(authid, page, pageSize);
+    public BaseResult<Object> getUserPosts(String authid, @RequestParam(defaultValue = "1")int page, @RequestParam(defaultValue = "10")int pageSize) {
+        return BaseResult.success(userPostService.getUserPosts(authid, page, pageSize));
     }
 
 }

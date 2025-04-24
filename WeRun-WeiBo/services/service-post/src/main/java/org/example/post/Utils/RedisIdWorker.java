@@ -1,4 +1,4 @@
-package org.example.post.Utils;
+package org.example.post.utils;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Redis分布式ID生成器
@@ -44,14 +45,14 @@ public class RedisIdWorker {
 
         // 如果Redis中不存在该键，则初始化为0
         if (!stringRedisTemplate.hasKey(key)) {
-            stringRedisTemplate.opsForValue().set(key, "0");
+            stringRedisTemplate.opsForValue().set(key, "0",3600, TimeUnit.SECONDS);
         }
 
         // 对键进行自增操作,避免时间戳之差重复
         Long count = stringRedisTemplate.opsForValue().increment(key);
         // 如果自增失败，则抛出异常
         if (count == null) {
-            throw new RuntimeException("Failed to increment Redis key: " + key);
+            throw new RuntimeException("获取全局唯一ID失败: " + key);
         }
         // 将时间戳偏移量和自增计数组合成一个64位的ID
         return (timeStamp << 32) | count;

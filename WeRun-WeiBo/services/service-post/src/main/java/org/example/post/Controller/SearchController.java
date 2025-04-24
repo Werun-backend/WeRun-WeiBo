@@ -1,13 +1,11 @@
-package org.example.post.Controller;
+package org.example.post.controller;
 
-import org.example.post.POJO.BO.PostBO;
-import org.example.post.Service.SearchService;
-import org.example.post.POJO.VO.PageResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.example.common.model.global.BaseResult;
+import org.example.post.pojo.vo.PostVO;
+import org.example.post.service.SearchService;
+import org.springframework.web.bind.annotation.*;
 
-@RequestMapping(value = "/post/search")
+@RequestMapping("/post/search")
 @RestController
 public class SearchController {
 
@@ -16,12 +14,20 @@ public class SearchController {
     public SearchController(SearchService searchService) {
         this.searchService = searchService;
     }
-    @PostMapping("/keywords")
-    public PageResult<PostBO> searchPosts(String keyword, int page, int pageSize) {
-        return searchService.searchPosts(keyword, page, pageSize);
+    @GetMapping("/keywords")
+    public BaseResult<Object> searchPosts(String keyword, @RequestParam(defaultValue = "1")int page, @RequestParam(defaultValue = "10")int pageSize) {
+        return BaseResult.success(searchService.searchPosts(keyword, page, pageSize));
     }
-    @PostMapping("/tag")
-    public PageResult<PostBO> searchPostsByTag(String tagName, int page, int pageSize) {
-        return searchService.searchPostsByTag(tagName, page, pageSize);
+    @GetMapping("/tag")
+    public BaseResult<Object> searchPostsByTag(String tagName, @RequestParam(defaultValue = "1")int page, @RequestParam(defaultValue = "10")int pageSize) {
+        return BaseResult.success(searchService.searchPostsByTag(tagName, page, pageSize));
+    }
+    @GetMapping("/id")
+    public PostVO searchPostsById(String uuid) {
+        return searchService.searchPostsById(uuid);
+    }
+    @GetMapping("/check")
+    public int checkPostsById(String uuid,String authorId) {
+        return searchService.checkPostsById(uuid,authorId);
     }
 }

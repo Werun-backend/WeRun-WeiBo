@@ -1,4 +1,4 @@
-package org.example.auth.Config;
+package org.example.auth.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,6 +38,6 @@ public class SecurityConfig {
     }
     @Bean
     public JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withJwkSetUri("http://localhost:8080/auth/realms/WeRun/protocol/openid-connect/certs").build();
+        return NimbusJwtDecoder.withJwkSetUri("http://localhost:9010/auth/realms/WeRun/protocol/openid-connect/certs").build();
     }
 }

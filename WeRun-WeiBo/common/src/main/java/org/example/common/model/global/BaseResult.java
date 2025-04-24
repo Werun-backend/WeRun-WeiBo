@@ -140,20 +140,23 @@ public class BaseResult<T> {
         System.out.println(BaseResult.success().data);
     }
 
-    public Object get(String tag){
+    public Object get(String tag) {
         return switch (tag) {
             case MSG_TAG -> msg;
             case CODE_TAG -> code;
             case DATA_TAG -> data;
             default -> null;
         };
+
     }
-    public void put(String tag, Object o){
-        switch (tag){
-            case MSG_TAG: this.msg = (String) o;
-            case CODE_TAG: this.code = (Integer) o;
-            case DATA_TAG: this.data = (T)o;
+        public void put (String tag, Object o){
+            switch (tag) {
+                case MSG_TAG:
+                    this.msg = (String) o;
+                case CODE_TAG:
+                    this.code = (Integer) o;
+                case DATA_TAG:
+                    this.data = (T) o;
+            }
         }
     }
-
-}

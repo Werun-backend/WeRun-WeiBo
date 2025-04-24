@@ -1,20 +1,20 @@
-package org.example.post.Service.impl;
+package org.example.post.service.impl;
 
-import org.example.common.model.user.UserBO;
-import org.example.post.Mapper.PostMapper;
-import org.example.post.POJO.DTO.PostDTO;
-import org.example.post.POJO.PO.PostPO;
-import org.example.post.POJO.DTO.UpdateDTO;
-import org.example.post.Service.PostService;
-import org.example.post.Utils.JwtUtils;
-import org.example.post.Utils.RedisIdWorker;
+import org.example.post.mapper.PostMapper;
+import org.example.post.pojo.dto.PostDTO;
+import org.example.post.pojo.po.PostPO;
+import org.example.post.pojo.dto.UpdateDTO;
+import org.example.post.service.PostService;
+import org.example.post.utils.JwtUtils;
+import org.example.post.utils.RedisIdWorker;
+import org.example.post.utils.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -49,12 +49,11 @@ public class PostServiceImpl implements PostService {
             }
             try {
                 // 确保 getScheduleTime() 返回的是 LocalDateTime 类型
-                LocalDateTime scheduleTime = postPO.getScheduleTime();
+                Date scheduleTime = postPO.getScheduleTime();
                 logger.info("定时发布时间：{}", scheduleTime);
                 logger.debug("定时发布时间正常进行");
-                long executeTime = scheduleTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
                 logger.debug("定时发布时间转换");
-                schedulePost(postPO, executeTime + 10);
+                schedulePost(postPO);
                 logger.debug("完成定时发布服务");
             } catch (Exception e) {
                 logger.error("Error while processing scheduled time: {}", e.getMessage(), e);
@@ -76,7 +75,19 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     public void updatePost(UpdateDTO updateDto) {
+        //检查用户id是否与帖子作者id匹配
+        String token = ThreadContext.getThreadLocal();
+        if (!updateDto.getUuid().equals(JwtUtils.parseJWT(token).get("uuid") )){
+            logger.error("用户id不匹配");
+            return;
+        }
+
         logger.debug("现在进入更新帖子的服务");
+        if(updateDto.getUpdateTime()!=null){
+            logger.debug("更新时间异常");
+            return;
+        }
+        updateDto.setUpdateTime(new Date());
         postMapper.updatePost(updateDto);
         logger.debug("将更新的内容存到数据库");
         String postId = updateDto.getUuid();
@@ -108,34 +119,54 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     public void deletePost(String uuid) {
+        //检查用户id是否与帖子作者id匹配
+        String token = ThreadContext.getThreadLocal();
+        if (!uuid.equals(JwtUtils.parseJWT(token).get("uuid") )){
+            logger.error("用户id不匹配");
+            return;
+        }
         logger.debug("现在进行删除帖子的操作");
         postMapper.deletePost(uuid);
+        postMapper.deleteTags(uuid);
         logger.debug("删除帖子完成");
         // 实现删除逻辑
     }
 
     @Override
-    public PostPO assemblePO(PostDTO postDTO, String token) {
+    public PostPO assemblePO(PostDTO postDTO){
+        logger.debug("开始进行帖子PO的创建");
+        String token = ThreadContext.getThreadLocal();
         String jwt = token.substring(7);
-        UserBO user = (UserBO) JwtUtils.parseJWT(jwt).get("user");
-        return new PostPO(String.valueOf(redisIdWorker.nextId("post")), user.getUuid(), postDTO.getTitle(), postDTO.getContent(), postDTO.getSchedule(), postDTO.getScheduleTime(), postDTO.getTags());
+        logger.debug("获取到token");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        logger.debug("开始进行时间转换");
+        Date parsedDate = null;
+        try {
+            parsedDate = formatter.parse(postDTO.getScheduleTime());
+        } catch (Exception e) {
+            logger.error("时间转换出现问题");
+        }
+        logger.debug("时间转换完成");
+        try {
+            return new PostPO(String.valueOf(redisIdWorker.nextId("post")), (String) JwtUtils.parseJWT(jwt).get("uuid"), postDTO.getTitle(), postDTO.getContent(), postDTO.getSchedule(), parsedDate, postDTO.getTags());
+        } catch (Exception e) {
+            logger.error("帖子PO创建出现问题");
+            return null;
+
+        }
     }
 
-    private void schedulePost(PostPO postPO, long executeTime) {
+    private void schedulePost(PostPO postPO) {
         logger.debug("正在进行帖子定时发布工作，现在在用redis缓存数据");
         Map<String, Object> map = new HashMap<>();
         map.put("uuid", postPO.getUuid());
         map.put("authorId", postPO.getAuthorId());
         map.put("title", postPO.getTitle());
         map.put("content", postPO.getContent());
-        map.put("scheduleTime", postPO.getScheduleTime());
+        String exp = postPO.getScheduleTime().toString();
+        map.put("scheduleTime", exp);
         map.put("tags", postPO.getTags());
-        JwtUtils jwtUtils = new JwtUtils();
-        jwtUtils.setEXPIRATION(executeTime);
-        String jwt = jwtUtils.generateToken(map);
+        String jwt = JwtUtils.generateJwt(map);
         stringRedisTemplate.opsForValue().set("post:" + postPO.getUuid(), jwt);
-        if (postPO.getTags() != null && !postPO.getTags().isEmpty()) {
-            stringRedisTemplate.opsForList().rightPushAll("tags:selected:" + postPO.getUuid(), postPO.getTags());
-        }
     }
 }

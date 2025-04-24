@@ -1,10 +1,9 @@
-package org.example.post.Config;
+package org.example.post.config;
 
 import io.jsonwebtoken.Claims;
-import org.example.post.POJO.DTO.PostDTO;
-import org.example.post.POJO.PO.PostPO;
-import org.example.post.Service.PostService;
-import org.example.post.Utils.JwtUtils;
+import org.example.post.pojo.po.PostPO;
+import org.example.post.service.PostService;
+import org.example.post.utils.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
@@ -12,8 +11,9 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Configuration
 @EnableScheduling
@@ -26,13 +26,18 @@ public class PostScanConfig {
         this.postService = postService;
     }
     @Scheduled(fixedRate = 1000)
-    public void scanAndExecuteTask() {
-//        logger.info("正在运行探测");
-        List<String> tasks = stringRedisTemplate.opsForList().range("post:*", 0, -1);
-        if (tasks != null&& !tasks.isEmpty())
+    public void scanAndExecuteTask() throws InterruptedException {
+        Set<String> tasks = stringRedisTemplate.keys("post:*");
+//        logger.debug("扫描中{}",tasks);
+        if (!tasks.isEmpty()){
+//            logger.debug("扫描预发布帖子");
             for (String taskId : tasks) {
-                Claims claims = JwtUtils.parseJWT(taskId);
-                if (claims.getExpiration().before(new java.util.Date(System.currentTimeMillis()-500))) {
+                String jwt = stringRedisTemplate.opsForValue().get(taskId);
+//                logger.debug("获取到JWT{}",jwt);
+                Claims claims = JwtUtils.parseJWT(jwt);
+                Long StringExp = (Long) claims.get("exp");
+                Date exp = new Date(StringExp);
+                if (exp.after(new Date(System.currentTimeMillis()))) {
                     logger.debug("定时结束进入到发布阶段");
                     logger.info("解析即将过期的令牌为:{}",claims);
                     logger.debug("改变获取的帖子的帖子状态");
@@ -41,11 +46,13 @@ public class PostScanConfig {
                             (String) claims.get("title"),
                             (String) claims.get("content"),
                             2,
-                            (LocalDateTime) claims.get("scheduleTime"),
+                            null,
                             (List<String>) claims.get("tags"));
                     postService.publishPost(thePost);
                     logger.debug("发布帖子");
+                    stringRedisTemplate.delete(taskId);
                 }
             }
+        }
     }
 }

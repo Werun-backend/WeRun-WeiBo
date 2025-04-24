@@ -1,9 +1,11 @@
-package org.example.post.Service;
+package org.example.post.service;
 
 
-import org.example.post.POJO.DTO.PostDTO;
-import org.example.post.POJO.PO.PostPO;
-import org.example.post.POJO.DTO.UpdateDTO;
+import org.example.post.pojo.dto.PostDTO;
+import org.example.post.pojo.po.PostPO;
+import org.example.post.pojo.dto.UpdateDTO;
+
+import java.text.ParseException;
 
 public interface PostService {
 
@@ -21,5 +23,5 @@ public interface PostService {
     void deletePost(String uuid);
 
 
-    PostPO assemblePO(PostDTO postDTO, String token);
+    PostPO assemblePO(PostDTO postDTO) throws ParseException;
 }

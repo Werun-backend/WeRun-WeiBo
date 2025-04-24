@@ -1,4 +1,4 @@
-package org.example.post.POJO.VO;
+package org.example.post.pojo.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

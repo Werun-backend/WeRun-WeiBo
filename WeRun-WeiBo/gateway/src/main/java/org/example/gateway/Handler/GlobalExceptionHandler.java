@@ -1,8 +1,6 @@
-package org.example.gateway.Handler;
+package org.example.gateway.handler;
 
 
-import org.example.gateway.Utils.BaseResult;
-import org.example.gateway.Utils.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,9 +24,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseBody
     @ResponseStatus
-    public BaseResult<Object> handlerException(Exception e) {
+    public void handlerException(Exception e) {
         // 返回错误响应，包含异常信息
         logger.error("发生错误:{}",e.getMessage());
-        return BaseResult.error(HttpStatus.ERROR,null);
     }
 }

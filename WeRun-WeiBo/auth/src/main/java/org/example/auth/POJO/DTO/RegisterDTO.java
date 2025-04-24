@@ -1,4 +1,4 @@
-package org.example.auth.POJO.DTO;
+package org.example.auth.pojo.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
