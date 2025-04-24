@@ -1,4 +1,4 @@
-package org.example.gateway.Utils;
+package org.example.gateway.utils;
 
 import lombok.Data;
 
