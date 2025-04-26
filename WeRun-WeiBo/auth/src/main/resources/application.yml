@@ -3,12 +3,12 @@ server:
 spring:
   application:
     name: auth
-#  cloud:
-#    nacos:
-#      discovery:
-#       server-addr: 192.168.11.128:8848
-#       username: nacos
-#       password: nacos
+  cloud:
+    nacos:
+      discovery:
+       server-addr: 10.236.241.105:8848
+       username: nacos
+       password: nacos
   datasource:
     url: jdbc:mysql://10.236.241.105:3308/WeiBo?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -37,10 +37,27 @@ spring:
           github:
             client-id: Ov23li1VgdcfCCkPne5i
             client-secret: 38205fdf4a46ab93958af743309202f266673117
-            redirect-uri: http://localhost:9010/login/oauth2/code/github
+#            redirect-uri: http://localhost:9010/login/oauth2/code/github
+        provider:
+          github:
+            authorization-uri: https://github.com/login/oauth/authorize
+            token-uri: https://github.com/login/oauth/access_token
+            user-info-uri: https://api.github.com/user
+            user-name-attribute: login # 或 email, name 等
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:9010/auth/realms/WeRun/protocol/openid-connect/certs
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          github:
+#            client-id: Ov23li1VgdcfCCkPne5i
+#            client-secret: 38205fdf4a46ab93958af743309202f266673117
+#            redirect-uri: http://localhost:9010/login/oauth2/code/github
+#      resourceserver:
+#        jwt:
+#          jwk-set-uri: http://localhost:9010/auth/realms/WeRun/protocol/openid-connect/certs
 logging:
   level:
     org.example.auth: debug

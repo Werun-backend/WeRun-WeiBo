@@ -1,4 +1,4 @@
-package org.example.gateway.utils;
+package org.example.gateway.Utils;
 
 public class HttpStatus
 {

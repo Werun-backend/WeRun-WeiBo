@@ -1,9 +1,12 @@
 package org.example.auth.service;
 
 import jakarta.validation.Valid;
-import org.example.auth.pojo.bo.CheckEmailBO;
-import org.example.auth.pojo.dto.*;
-import org.example.auth.pojo.vo.LoginVO;
+import org.example.auth.POJO.BO.CheckEmailBO;
+import org.example.auth.POJO.DTO.LoginDTO;
+import org.example.auth.POJO.DTO.RegisterDTO;
+import org.example.auth.POJO.DTO.ResetDTO;
+import org.example.auth.POJO.DTO.ResetPasswordDTO;
+import org.example.auth.POJO.VO.LoginVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
