@@ -29,5 +29,6 @@
             <scope>annotationProcessor</scope>
         </dependency>
     </dependencies>
+    <!-- pom.xml 配置示例 -->
 
 </project>
