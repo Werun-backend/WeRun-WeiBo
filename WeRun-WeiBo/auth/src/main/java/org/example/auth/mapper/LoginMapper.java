@@ -4,10 +4,10 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-import org.example.auth.pojo.dto.LoginDTO;
+import org.example.auth.POJO.DTO.LoginDTO;
+import org.example.auth.POJO.PO.RegisterPO;
+import org.example.auth.POJO.PO.ResetPO;
 import org.example.common.model.user.UserBO;
-import org.example.auth.pojo.po.RegisterPO;
-import org.example.auth.pojo.po.ResetPO;
 
 import java.util.List;
 

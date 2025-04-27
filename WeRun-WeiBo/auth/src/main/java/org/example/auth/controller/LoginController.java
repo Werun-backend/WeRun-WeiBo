@@ -4,9 +4,12 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
-import org.example.auth.pojo.bo.CheckEmailBO;
-import org.example.auth.pojo.dto.*;
-import org.example.auth.pojo.vo.LoginVO;
+import org.example.auth.POJO.BO.CheckEmailBO;
+import org.example.auth.POJO.DTO.LoginDTO;
+import org.example.auth.POJO.DTO.RegisterDTO;
+import org.example.auth.POJO.DTO.ResetDTO;
+import org.example.auth.POJO.DTO.ResetPasswordDTO;
+import org.example.auth.POJO.VO.LoginVO;
 import org.example.auth.service.LoginService;
 import org.example.common.model.global.BaseResult;
 import org.slf4j.Logger;
@@ -29,7 +32,7 @@ public class LoginController {
     private final LoginService loginService;
     Logger logger = LoggerFactory.getLogger(LoginController.class);
     @PostMapping("/login/common")
-    public BaseResult<Object>login(@RequestBody @Valid LoginDTO loginDTO) {
+    public BaseResult<Object> login(@RequestBody @Valid LoginDTO loginDTO) {
         return BaseResult.success("登录成功",loginService.login(loginDTO).join());
     }
     @GetMapping("/login/emailSend")
@@ -63,7 +66,7 @@ public class LoginController {
     }
 
     @PostMapping("/register/sendCode")
-    public BaseResult<Object> registerSend(@RequestBody @Valid RegisterDTO registerDTO,MultipartFile file) throws IOException {
+    public BaseResult<Object> registerSend(@RequestBody @Valid RegisterDTO registerDTO, MultipartFile file) throws IOException {
         loginService.register(registerDTO,file);
         return BaseResult.success("发送成功",null);
     }
@@ -85,13 +88,5 @@ public class LoginController {
         return BaseResult.success("完成重置密码并登录",null);
     }
 
-    @GetMapping("/login/github")
-    public BaseResult<Object> loginByGithub(Model model, @RegisteredOAuth2AuthorizedClient(registrationId = "github") OAuth2AuthorizedClient authorizedClient,
-                            @AuthenticationPrincipal OAuth2User oauth2User) {
-            model.addAttribute("userName", oauth2User.getName());
-            model.addAttribute("clientName", authorizedClient.getClientRegistration().getClientName());
-            model.addAttribute("userAttributes", oauth2User.getAttributes());
-            return BaseResult.success("github登录成功",null);
-        }
 
 }

@@ -1,13 +1,16 @@
 package org.example.auth.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
+import org.example.auth.POJO.BO.CheckEmailBO;
+import org.example.auth.POJO.DTO.LoginDTO;
+import org.example.auth.POJO.DTO.RegisterDTO;
+import org.example.auth.POJO.DTO.ResetDTO;
+import org.example.auth.POJO.DTO.ResetPasswordDTO;
+import org.example.auth.POJO.PO.RegisterPO;
+import org.example.auth.POJO.PO.ResetPO;
+import org.example.auth.POJO.VO.LoginVO;
 import org.example.auth.mapper.LoginMapper;
-import org.example.auth.pojo.bo.CheckEmailBO;
-import org.example.auth.pojo.dto.*;
 import org.example.common.model.user.UserBO;
-import org.example.auth.pojo.po.RegisterPO;
-import org.example.auth.pojo.po.ResetPO;
-import org.example.auth.pojo.vo.LoginVO;
 import org.example.auth.service.LoginService;
 import org.example.auth.utils.JwtUtils;
 import org.example.auth.utils.MD5Encryptor;

@@ -1,4 +1,4 @@
-package org.example.auth.pojo.vo;
+package org.example.auth.POJO.VO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
