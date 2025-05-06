@@ -1,0 +1,24 @@
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins: "http://localhost:8080"
+            allowed-methods: "*"
+            allowed-headers: "*"
+            allow-credentials: true
+            max-age: 3600
+      routes:
+        - id: service-post
+          uri: lb://service-post
+          predicates:
+            - Path=/post/**
+        - id: service-friend
+          uri: lb://service-comment
+          predicates:
+            - Path=/comment/**
+        - id: auth
+          uri: lb://auth
+          predicates:
+            - Path=/auth/**
