@@ -100,7 +100,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void deleteUnderPost(String postId, String commentId,String token) {
-        if(findPostClient.checkPostsById(postId,JwtUtils.getUserId(token))==0){
+        if(findPostClient.checkPostsById(postId,JwtUtils.getUserId(token)).getData()==0){
             logger.error("你没有权限删除这个帖子");
             throw new RuntimeException("删除错误");
         }

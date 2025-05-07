@@ -147,10 +147,11 @@ public class PostServiceImpl implements PostService {
             logger.error("时间转换出现问题");
         }
         logger.debug("时间转换完成");
+        logger.info("参数:{},{},{},{},{},{},{}", JwtUtils.parseJWT(jwt).get("uuid"), postDTO.getTitle(), postDTO.getTitle(), postDTO.getContent(), postDTO.getSchedule(), parsedDate, postDTO.getTags());
         try {
             return new PostPO(String.valueOf(redisIdWorker.nextId("post")), (String) JwtUtils.parseJWT(jwt).get("uuid"), postDTO.getTitle(), postDTO.getContent(), postDTO.getSchedule(), parsedDate, postDTO.getTags());
         } catch (Exception e) {
-            logger.error("帖子PO创建出现问题");
+            logger.error("帖子PO创建出现问题:{}", e.getMessage());
             return null;
 
         }

@@ -5,6 +5,7 @@ import org.example.post.pojo.dto.PostDTO;
 import org.example.post.pojo.po.PostPO;
 import org.example.post.pojo.dto.UpdateDTO;
 import org.example.post.service.PostService;
+import org.example.post.utils.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,8 @@ public class PostController {
     Logger logger = LoggerFactory.getLogger(PostController.class);
 
     @PostMapping("/insert")
-    public BaseResult<Object> insertPost(@RequestBody PostDTO postDTO, @RequestHeader("Authorization") String token1, @RequestHeader("Authorization0") String refreshToken1) throws ParseException {
+    public BaseResult<Object> insertPost(@RequestBody PostDTO postDTO, @RequestHeader("Authorization") String token1) throws ParseException {
+        ThreadContext.setThreadLocal(token1);
         logger.debug("开始进行PO创建,DTO为: {}", postDTO);
         PostPO postPO = postService.assemblePO(postDTO);
         postService.publishPost(postPO);
@@ -33,13 +35,14 @@ public class PostController {
     }
 
     @PostMapping("/update")
-    public BaseResult<Object> updatePost(@RequestBody UpdateDTO updateDto, @RequestHeader("Authorization") String token1, @RequestHeader("Authorization0") String refreshToken) {
-
+    public BaseResult<Object> updatePost(@RequestBody UpdateDTO updateDto, @RequestHeader("Authorization") String token1) {
+        ThreadContext.setThreadLocal(token1);
         postService.updatePost(updateDto);
         return BaseResult.success();
     }
     @DeleteMapping("/delete")
-    public BaseResult<Object> deletePost(String uuid, @RequestHeader("Authorization") String token, @RequestHeader("Authorization0") String refreshToken) {
+    public BaseResult<Object> deletePost(String uuid, @RequestHeader("Authorization") String token) {
+        ThreadContext.setThreadLocal(token);
         postService.deletePost(uuid);
         return BaseResult.success();
     }

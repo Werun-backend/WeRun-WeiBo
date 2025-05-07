@@ -1,7 +1,6 @@
 package org.example.comment.controller;
 
 import jakarta.validation.Valid;
-import org.example.comment.utils.ThreadContext;
 import org.example.common.model.global.BaseResult;
 import org.example.comment.pojo.dto.CTCDTO;
 import org.example.comment.pojo.dto.CTPDTO;
@@ -22,20 +21,18 @@ public class CommentController {
     }
 
     @PostMapping("/toPost")
-    public BaseResult<Object> toPost(@Valid CTPDTO ctpdto, @RequestHeader("Authorization") String token1,@RequestHeader("Authorization0") String token0){
-        String token = ThreadContext.getThreadLocal();
+    public BaseResult<Object> toPost(@Valid CTPDTO ctpdto, @RequestHeader("Authorization") String token){
+
         commentService.toPost(ctpdto,token);
         return BaseResult.success();
     }
     @PostMapping("/toComment")
-    public BaseResult<Object> toComment(@Valid CTCDTO ctcdto, @RequestHeader("Authorization") String token1,@RequestHeader("Authorization0") String token0){
-        String token = ThreadContext.getThreadLocal();
+    public BaseResult<Object> toComment(@Valid CTCDTO ctcdto, @RequestHeader("Authorization") String token){
         commentService.toComment(ctcdto,token);
         return BaseResult.success();
     }
     @PostMapping("/reply")
-    public BaseResult<Object> reply(@Valid ReplyDTO replydto, @RequestHeader("Authorization") String token1,@RequestHeader("Authorization0") String token0){
-        String token = ThreadContext.getThreadLocal();
+    public BaseResult<Object> reply(@Valid ReplyDTO replydto, @RequestHeader("Authorization") String token){
         commentService.reply(replydto,token);
         return BaseResult.success();
     }
@@ -48,32 +45,27 @@ public class CommentController {
         return BaseResult.success(commentService.getCommentsByLikes(postId).get());
     }
     @DeleteMapping("/deleteMyCommentsCTC")
-    public BaseResult<Object> deleteMyCommentsCTC(String commentId, @RequestHeader("Authorization") String token1,@RequestHeader("Authorization0") String token0){
-        String token = ThreadContext.getThreadLocal();
+    public BaseResult<Object> deleteMyCommentsCTC(String commentId, @RequestHeader("Authorization") String token){
         commentService.deleteMyCommentsCTC(commentId,token);
         return BaseResult.success();
     }
     @DeleteMapping("/deleteMyCommentsCTP")
-    public BaseResult<Object> deleteMyCommentsCTP(String commentId, @RequestHeader("Authorization") String token1,@RequestHeader("Authorization0") String token0){
-        String token = ThreadContext.getThreadLocal();
+    public BaseResult<Object> deleteMyCommentsCTP(String commentId, @RequestHeader("Authorization") String token){
         commentService.deleteMyCommentsCTP(commentId,token);
         return BaseResult.success();
     }
     @DeleteMapping("/deleteUnderPost")
-    public BaseResult<Object> deleteUnderPost(String postId,String commentId, @RequestHeader("Authorization") String token1,@RequestHeader("Authorization0") String token0){
-        String token = ThreadContext.getThreadLocal();
+    public BaseResult<Object> deleteUnderPost(String postId,String commentId, @RequestHeader("Authorization") String token){
         commentService.deleteUnderPost(postId,commentId,token);
         return BaseResult.success();
     }
     @PostMapping("/like")
-    public BaseResult<Object> like(String commentId, @RequestHeader("Authorization") String token1,@RequestHeader("Authorization0") String token0){
-        String token = ThreadContext.getThreadLocal();
+    public BaseResult<Object> like(String commentId, @RequestHeader("Authorization") String token){
         commentService.like(commentId,token);
         return BaseResult.success();
     }
     @PostMapping("/cancellike")
-    public BaseResult<Object> cancellike(String commentId, @RequestHeader("Authorization") String token1,@RequestHeader("Authorization0") String token0){
-        String token = ThreadContext.getThreadLocal();
+    public BaseResult<Object> cancellike(String commentId, @RequestHeader("Authorization") String token){
         commentService.cancellike(commentId,token);
         return BaseResult.success();
     }

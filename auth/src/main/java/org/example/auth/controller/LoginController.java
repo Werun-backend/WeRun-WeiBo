@@ -81,6 +81,4 @@ public class LoginController {
         loginService.ResetPassword(resetPasswordDTO);
         return BaseResult.success("完成重置密码并登录",null);
     }
-
-
 }

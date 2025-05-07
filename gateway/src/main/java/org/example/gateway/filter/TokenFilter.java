@@ -61,7 +61,7 @@ public class TokenFilter implements Filter {
                     token = refreshToken;
                     Logger.debug("刷新token成功");
                     ThreadContext.setThreadLocal(token);
-                    refreshToken = JwtUtils.generateJwt(claims1);
+                    JwtUtils.generateJwt(claims1);
                     Logger.debug("刷新token成功");
                     request = new CustomHttpServletRequestWrapper(request, token);
                 } catch (Exception ex) {

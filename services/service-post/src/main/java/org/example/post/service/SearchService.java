@@ -1,5 +1,6 @@
 package org.example.post.service;
 
+import org.example.common.model.global.BaseResult;
 import org.example.post.pojo.vo.PageResult;
 import org.example.post.pojo.vo.PostVO;
 
@@ -13,5 +14,5 @@ public interface SearchService {
 
     PostVO searchPostsById(String uuid);
 
-    int checkPostsById(String uuid, String authorId);
+    BaseResult<Integer> checkPostsById(String uuid, String authorId);
 }

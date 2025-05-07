@@ -1,5 +1,6 @@
 package org.example.post.service.impl;
 
+import org.example.common.model.global.BaseResult;
 import org.example.post.mapper.SearchPostMapper;
 import org.example.post.pojo.vo.PageResult;
 import org.example.post.pojo.vo.PostVO;
@@ -67,9 +68,9 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public int checkPostsById(String uuid, String authorId) {
+    public BaseResult<Integer> checkPostsById(String uuid, String authorId) {
         logger.debug("正在检查帖子");
-        return searchPostMapper.checkPostsById(uuid,authorId);
+        return BaseResult.success(searchPostMapper.checkPostsById(uuid,authorId));
     }
 }
 

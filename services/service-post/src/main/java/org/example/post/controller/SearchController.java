@@ -23,11 +23,11 @@ public class SearchController {
         return BaseResult.success(searchService.searchPostsByTag(tagName, page, pageSize));
     }
     @GetMapping("/id")
-    public PostVO searchPostsById(String uuid) {
-        return searchService.searchPostsById(uuid);
+    public BaseResult<PostVO> searchPostsById(String uuid) {
+        return BaseResult.success(searchService.searchPostsById(uuid));
     }
     @GetMapping("/check")
-    public int checkPostsById(String uuid,String authorId) {
+    public BaseResult<Integer> checkPostsById(String uuid, String authorId) {
         return searchService.checkPostsById(uuid,authorId);
     }
 }
