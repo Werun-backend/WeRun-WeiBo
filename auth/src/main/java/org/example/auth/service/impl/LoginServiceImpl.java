@@ -11,13 +11,14 @@ import org.example.auth.POJO.PO.ResetPO;
 import org.example.auth.POJO.VO.LoginInfVO;
 import org.example.auth.POJO.VO.LoginVO;
 import org.example.auth.mapper.LoginMapper;
+import org.example.auth.utils.RedisIdWorker;
 import org.example.common.model.user.UserBO;
 import org.example.auth.service.LoginService;
-import org.example.auth.utils.JwtUtils;
-import org.example.auth.utils.MD5Encryptor;
-import org.example.auth.utils.RedisIdWorker;
+import org.example.common.model.util.MD5Encryptor;
+
 import org.example.common.model.global.AppException;
 import org.example.common.model.global.HttpStatus;
+import org.example.common.model.util.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;

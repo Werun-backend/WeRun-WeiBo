@@ -5,11 +5,11 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-import org.example.comment.pojo.po.CTCPO;
-import org.example.comment.pojo.po.CTPPO;
-import org.example.comment.pojo.po.ReplyPO;
-import org.example.comment.pojo.vo.CTCVO;
-import org.example.comment.pojo.vo.CTPVO;
+import org.example.comment.POJO.PO.CTCPO;
+import org.example.comment.POJO.PO.CTPPO;
+import org.example.comment.POJO.PO.ReplyPO;
+import org.example.comment.POJO.VO.CTCVO;
+import org.example.comment.POJO.VO.CTPVO;
 
 import java.util.List;
 

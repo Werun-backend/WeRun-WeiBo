@@ -3,17 +3,19 @@ package org.example.comment.service.impl;
 
 import org.example.comment.clients.FindPostClient;
 import org.example.comment.mapper.CommentMapper;
-import org.example.comment.pojo.dto.CTCDTO;
-import org.example.comment.pojo.dto.CTPDTO;
-import org.example.comment.pojo.dto.ReplyDTO;
-import org.example.comment.pojo.po.CTCPO;
-import org.example.comment.pojo.po.CTPPO;
-import org.example.comment.pojo.po.ReplyPO;
-import org.example.comment.pojo.vo.CTPPlusVO;
-import org.example.comment.pojo.vo.CTPVO;
+import org.example.comment.POJO.DTO.CTCDTO;
+import org.example.comment.POJO.DTO.CTPDTO;
+import org.example.comment.POJO.DTO.ReplyDTO;
+import org.example.comment.POJO.PO.CTCPO;
+import org.example.comment.POJO.PO.CTPPO;
+import org.example.comment.POJO.PO.ReplyPO;
+import org.example.comment.POJO.VO.CTPPlusVO;
+import org.example.comment.POJO.VO.CTPVO;
 import org.example.comment.service.CommentService;
-import org.example.comment.utils.JwtUtils;
+
 import org.example.comment.utils.RedisIdWorker;
+import org.example.common.model.util.JwtUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;

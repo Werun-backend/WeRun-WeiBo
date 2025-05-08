@@ -1,13 +1,13 @@
 package org.example.post.service.impl;
 
+import org.example.common.model.util.JwtUtils;
 import org.example.post.mapper.PostMapper;
 import org.example.post.pojo.dto.PostDTO;
 import org.example.post.pojo.po.PostPO;
 import org.example.post.pojo.dto.UpdateDTO;
 import org.example.post.service.PostService;
-import org.example.post.utils.JwtUtils;
+import org.example.common.model.util.ThreadContext;
 import org.example.post.utils.RedisIdWorker;
-import org.example.post.utils.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;

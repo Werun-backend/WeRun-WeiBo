@@ -1,4 +1,4 @@
-package org.example.auth.utils;
+package org.example.gateway.utils;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;

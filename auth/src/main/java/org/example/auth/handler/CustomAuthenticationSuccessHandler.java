@@ -18,10 +18,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
-        if (authentication.getPrincipal() instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User) {
+        if (authentication.getPrincipal() instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oauth2User) {
             // 处理 OAuth2 用户（包括 GitHub）
-            org.springframework.security.oauth2.core.user.DefaultOAuth2User oauth2User =
-                    (org.springframework.security.oauth2.core.user.DefaultOAuth2User) authentication.getPrincipal();
 
             String userName = oauth2User.getAttribute("login"); // 或 "login"（GitHub 的用户名字段）
             Map<String, Object> userAttributes = oauth2User.getAttributes();
@@ -30,10 +28,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write("{\"status\":\"success\", \"user\":\"" + userName + "\", \"attributes\":" + objectMapper.writeValueAsString(userAttributes) + "}");
-        } else if (authentication.getPrincipal() instanceof org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser) {
+        } else if (authentication.getPrincipal() instanceof DefaultOidcUser oidcUser) {
             // 处理 OIDC 用户（适用于 Google 等）
-            org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser oidcUser =
-                    (org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser) authentication.getPrincipal();
 
             String userName = oidcUser.getFullName(); // 或 "name"
             Map<String, Object> userAttributes = oidcUser.getClaims();

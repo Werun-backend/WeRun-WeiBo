@@ -2,9 +2,9 @@ package org.example.comment.controller;
 
 import jakarta.validation.Valid;
 import org.example.common.model.global.BaseResult;
-import org.example.comment.pojo.dto.CTCDTO;
-import org.example.comment.pojo.dto.CTPDTO;
-import org.example.comment.pojo.dto.ReplyDTO;
+import org.example.comment.POJO.DTO.CTCDTO;
+import org.example.comment.POJO.DTO.CTPDTO;
+import org.example.comment.POJO.DTO.ReplyDTO;
 import org.example.comment.service.CommentService;
 
 import org.springframework.web.bind.annotation.*;

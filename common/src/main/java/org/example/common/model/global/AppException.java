@@ -1,7 +1,7 @@
 package org.example.common.model.global;
 
 import lombok.Getter;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 
 /**
  * 自定义异常基类，继承自RuntimeException

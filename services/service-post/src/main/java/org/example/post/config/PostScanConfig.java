@@ -1,9 +1,9 @@
 package org.example.post.config;
 
 import io.jsonwebtoken.Claims;
+import org.example.common.model.util.JwtUtils;
 import org.example.post.pojo.po.PostPO;
 import org.example.post.service.PostService;
-import org.example.post.utils.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;

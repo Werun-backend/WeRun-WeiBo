@@ -1,10 +1,10 @@
 package org.example.comment.service;
 
 import jakarta.validation.Valid;
-import org.example.comment.pojo.dto.CTCDTO;
-import org.example.comment.pojo.dto.CTPDTO;
-import org.example.comment.pojo.dto.ReplyDTO;
-import org.example.comment.pojo.vo.CTPPlusVO;
+import org.example.comment.POJO.DTO.CTCDTO;
+import org.example.comment.POJO.DTO.CTPDTO;
+import org.example.comment.POJO.DTO.ReplyDTO;
+import org.example.comment.POJO.VO.CTPPlusVO;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

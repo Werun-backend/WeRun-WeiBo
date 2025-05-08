@@ -5,7 +5,7 @@ import org.example.post.pojo.dto.PostDTO;
 import org.example.post.pojo.po.PostPO;
 import org.example.post.pojo.dto.UpdateDTO;
 import org.example.post.service.PostService;
-import org.example.post.utils.ThreadContext;
+import org.example.common.model.util.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;

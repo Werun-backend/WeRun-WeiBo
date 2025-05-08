@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LoginVO {
     private String token;
-    private String refreshtoken;
+    private String refreshToken;
 }
