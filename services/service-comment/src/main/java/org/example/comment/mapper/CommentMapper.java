@@ -1,10 +1,7 @@
 package org.example.comment.mapper;
 
 import jakarta.validation.constraints.NotNull;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.example.comment.POJO.PO.CTCPO;
 import org.example.comment.POJO.PO.CTPPO;
 import org.example.comment.POJO.PO.ReplyPO;
@@ -37,9 +34,11 @@ public interface CommentMapper {
     void deleteUnderPost(String postId, String commentId);
     @Insert("insert into is_like(comment_id,user_id) values(#{commentId},#{userId})")
     void like(String commentId, String userId);
-    @Update("update CTP set is_liked = is_liked + 1 where comment_id = #{commentId}")
-    void cancellike(String commentId, String userId);
+    @Delete("delete from is_like where comment_id = #{commentId} and user_id = #{userId}")
+    void dislike(String commentId, String userId);
     @Update("update CTP set is_liked = is_liked - 1 where comment_id = #{commentId}")
+    void cancelLike(String commentId);
+    @Update("update CTP set is_liked = is_liked + 1 where comment_id = #{commentId}")
     void addLikeNum(String commentId);
     @Select("select comment_id, post_id, user_id, content, reply_num,is_liked, create_time  from CTP where post_id = #{postId} order by is_liked")
     List<CTPVO> getCTPByLikes(String postId);

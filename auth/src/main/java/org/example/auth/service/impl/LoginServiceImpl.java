@@ -16,8 +16,6 @@ import org.example.common.model.user.UserBO;
 import org.example.auth.service.LoginService;
 import org.example.common.model.util.MD5Encryptor;
 
-import org.example.common.model.global.AppException;
-import org.example.common.model.global.HttpStatus;
 import org.example.common.model.util.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +70,7 @@ public class LoginServiceImpl implements LoginService {
         logger.info("进行假删除过的账号的过滤工作,过滤后为:{}", newUserBO);
         if (newUserBO.isEmpty()) {
             logger.error("生成JWT令牌时，过滤后的获得的用户为空");
-            throw new AppException(HttpStatus.BAD_REQUEST,"登录错误",null);
+            throw new RuntimeException("登录错误");
         }
         UserBO oneloginBO;
         if(newUserBO.size()>1){
@@ -112,7 +110,7 @@ public class LoginServiceImpl implements LoginService {
         logger.debug("现在进行注册操作");
         if(loginMapper.checkUnique(registerDTO.getPhone(),registerDTO.getEmail())!=0){
             logger.error("注册发生重复的问题");
-            throw new AppException(HttpStatus.BAD_REQUEST,"手机号或邮箱已被注册",null);
+            throw new RuntimeException("手机号或邮箱已注册");
         }
         logger.debug("完成发生验证码进行下面的操作");
         sendCode(registerDTO.getEmail(),"register");
@@ -130,7 +128,7 @@ public class LoginServiceImpl implements LoginService {
         logger.debug("进行邮箱发送验证码");
         if (stringRedisTemplate.hasKey("email:code:"+email)) {
             logger.error("验证码发过了,如需重新接受等待600s");
-            throw new AppException(HttpStatus.BAD_REQUEST,"验证码已发送",null);
+            throw new RuntimeException("验证码已发送");
         }
         SimpleMailMessage mail =new SimpleMailMessage();
         String code = RandomUtil.randomNumbers(6);
@@ -156,10 +154,10 @@ public class LoginServiceImpl implements LoginService {
         if (stringRedisTemplate.hasKey("email:"+key+":"+ l.getEmail())) {
             String code = stringRedisTemplate.opsForValue().get("email:"+key+":"+ l.getEmail());
             if (code != null && !code.equals(l.getCode())) {
-                throw new AppException(HttpStatus.BAD_REQUEST, "验证码错误", null);
+                throw new RuntimeException("验证码错误");
             }
         }else {
-            throw new AppException(HttpStatus.BAD_REQUEST,"验证码已过期",null);
+            throw new RuntimeException("验证码已过期");
         }
         logger.debug("登录验证码的校验成功");
     }

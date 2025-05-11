@@ -7,7 +7,6 @@ import org.example.auth.POJO.DTO.RegisterDTO;
 import org.example.auth.POJO.DTO.ResetDTO;
 import org.example.auth.POJO.DTO.ResetPasswordDTO;
 import org.example.auth.POJO.VO.LoginInfVO;
-import org.example.auth.POJO.VO.LoginVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

@@ -21,18 +21,18 @@ public class CommentController {
     }
 
     @PostMapping("/toPost")
-    public BaseResult<Object> toPost(@Valid CTPDTO ctpdto, @RequestHeader("Authorization") String token){
+    public BaseResult<Object> toPost(@Valid @RequestBody CTPDTO ctpdto, @RequestHeader("Authorization") String token){
 
         commentService.toPost(ctpdto,token);
         return BaseResult.success();
     }
     @PostMapping("/toComment")
-    public BaseResult<Object> toComment(@Valid CTCDTO ctcdto, @RequestHeader("Authorization") String token){
+    public BaseResult<Object> toComment(@Valid @RequestBody CTCDTO ctcdto, @RequestHeader("Authorization") String token){
         commentService.toComment(ctcdto,token);
         return BaseResult.success();
     }
     @PostMapping("/reply")
-    public BaseResult<Object> reply(@Valid ReplyDTO replydto, @RequestHeader("Authorization") String token){
+    public BaseResult<Object> reply(@Valid @RequestBody ReplyDTO replydto, @RequestHeader("Authorization") String token){
         commentService.reply(replydto,token);
         return BaseResult.success();
     }
@@ -66,7 +66,7 @@ public class CommentController {
     }
     @PostMapping("/cancellike")
     public BaseResult<Object> cancellike(String commentId, @RequestHeader("Authorization") String token){
-        commentService.cancellike(commentId,token);
+        commentService.cancelLike(commentId,token);
         return BaseResult.success();
     }
 }

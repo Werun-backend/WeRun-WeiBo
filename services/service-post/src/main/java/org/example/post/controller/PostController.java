@@ -25,18 +25,18 @@ public class PostController {
     Logger logger = LoggerFactory.getLogger(PostController.class);
 
     @PostMapping("/insert")
-    public BaseResult<Object> insertPost(@RequestBody PostDTO postDTO, @RequestHeader("Authorization") String token1) throws ParseException {
-        ThreadContext.setThreadLocal(token1);
-        logger.debug("开始进行PO创建,DTO为: {}", postDTO);
+    public BaseResult<Object> insertPost(@RequestBody PostDTO postDTO, @RequestHeader("Authorization") String token) throws ParseException {
+        ThreadContext.setThreadLocal(token);
+        logger.info("开始进行PO创建,DTO为: {}", postDTO);
         PostPO postPO = postService.assemblePO(postDTO);
         postService.publishPost(postPO);
-        logger.debug("PO创建完成");
+        logger.info("PO创建完成");
         return BaseResult.success();
     }
 
     @PostMapping("/update")
-    public BaseResult<Object> updatePost(@RequestBody UpdateDTO updateDto, @RequestHeader("Authorization") String token1) {
-        ThreadContext.setThreadLocal(token1);
+    public BaseResult<Object> updatePost(@RequestBody UpdateDTO updateDto, @RequestHeader("Authorization") String token) {
+        ThreadContext.setThreadLocal(token);
         postService.updatePost(updateDto);
         return BaseResult.success();
     }

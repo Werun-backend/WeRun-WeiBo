@@ -25,5 +25,8 @@ public interface PostMapper {
 
         @Delete("DELETE FROM post_tags WHERE post_id = #{uuid}")
         void deleteTags(String uuid);
+
+        @Select("SELECT author_id FROM post WHERE uuid = #{uuid}")
+        String findAuthorId(String uuid);
 }
 

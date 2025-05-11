@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/post/userpost")
+@RequestMapping("/post/userPost")
 public class UserPostController {
 
     private final UserPostService userPostService;

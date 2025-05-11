@@ -26,6 +26,9 @@ spring:
           max-idle: 8
           min-idle: 0
           max-wait: 10000ms
+  aop:
+    auto: true
+    proxy-target-class: true
   mail:
     username: A19861577050@126.com
     password: VRv3uuraf5zb32Uf
@@ -37,13 +40,12 @@ spring:
           github:
             client-id: Ov23li1VgdcfCCkPne5i
             client-secret: 38205fdf4a46ab93958af743309202f266673117
-#            redirect-uri: http://localhost:9010/login/oauth2/code/github
         provider:
           github:
             authorization-uri: https://github.com/login/oauth/authorize
             token-uri: https://github.com/login/oauth/access_token
             user-info-uri: https://api.github.com/user
-            user-name-attribute: login # 或 email, name 等
+            user-name-attribute: login
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:9010/auth/realms/WeRun/protocol/openid-connect/certs
@@ -52,17 +54,6 @@ spring:
       enabled: true
       max-file-size : 10MB
       max-request-size : 10MB
-#  security:
-#    oauth2:
-#      client:
-#        registration:
-#          github:
-#            client-id: Ov23li1VgdcfCCkPne5i
-#            client-secret: 38205fdf4a46ab93958af743309202f266673117
-#            redirect-uri: http://localhost:9010/login/oauth2/code/github
-#      resourceserver:
-#        jwt:
-#          jwk-set-uri: http://localhost:9010/auth/realms/WeRun/protocol/openid-connect/certs
 logging:
   level:
     org.example.auth: debug

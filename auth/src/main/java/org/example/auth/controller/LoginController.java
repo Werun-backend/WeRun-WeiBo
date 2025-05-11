@@ -18,12 +18,10 @@ import org.example.common.model.util.JwtUtils;
 import org.example.common.model.util.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/auth")
@@ -35,26 +33,24 @@ public class LoginController {
     public BaseResult<Object> login(@RequestBody @Valid LoginDTO loginDTO) {
         return BaseResult.success("登录成功",loginService.login(loginDTO).join());
     }
-    @PostMapping("/auth/refresh")
-    public ResponseEntity<?> refreshToken(@RequestBody LoginVO request) {
+    @PostMapping("/refresh")
+    public BaseResult<Object> refreshToken(@RequestBody LoginVO request) {
         String refreshToken = request.getRefreshToken();
 
         // 验证Refresh Token有效性
         try {
-            JwtUtils.parseJWT(refreshToken);
+            JwtUtils.parseNewJWT(refreshToken);
         } catch (Exception e) {
-            return ResponseEntity.status(401).body("Invalid refresh token");
+            return BaseResult.error("刷新失败无效");
         }
         // 生成新Token
-        Claims claims = JwtUtils.parseJWT(refreshToken);
+        Claims claims = JwtUtils.parseNewJWT(refreshToken);
         String newAccessToken = JwtUtils.generateJwt(claims);
 
         // 更新Redis（存储用户最新Token）
         ThreadContext.setThreadLocal(newAccessToken);
 
-        return ResponseEntity.ok()
-                .header("Authorization", "Bearer " + newAccessToken)
-                .body("Token refreshed");
+        return BaseResult.success("刷新成功", new LoginVO(newAccessToken, refreshToken));
     }
     @GetMapping("/login/emailSend")
     public BaseResult<Object> mailLogin(@NotNull @Pattern(regexp = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$",

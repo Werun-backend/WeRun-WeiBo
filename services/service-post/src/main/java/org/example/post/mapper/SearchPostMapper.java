@@ -9,15 +9,16 @@ import java.util.List;
 
 @Mapper
 public interface SearchPostMapper {
+
     //根据输入的关键词查询帖子
-    @Select("SELECT * FROM post WHERE title LIKE CONCAT('%', #{keyword}, '%') OR content LIKE CONCAT('%', #{keyword}, '%')")
     List<PostVO> searchPosts(String keyword);
 
     //根据输入的标签查询帖子
-    @Select("SELECT p.* FROM post p JOIN post_tags pt ON p.uuid = pt.post_id WHERE pt.tagname LIKE CONCAT('%', #{tagname}, '%')")
-    List<PostVO> searchPostsByTag(@Param("tagname") String tagname);
-    @Select("SELECT * FROM post WHERE uuid = #{uuid}")
+    List<PostVO> searchPostsByTag(String tagName);
+
+    //根据输入的id查询帖子
     PostVO searchPostsById(String uuid);
-    @Select("SELECT count(*) FROM post WHERE uuid = #{uuid} AND author_id = #{authorId}")
+
+    //查找数量
     int checkPostsById(String uuid, String authorId);
 }

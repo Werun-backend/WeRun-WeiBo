@@ -28,19 +28,19 @@ public class PostScanConfig {
     @Scheduled(fixedRate = 1000)
     public void scanAndExecuteTask() throws InterruptedException {
         Set<String> tasks = stringRedisTemplate.keys("post:*");
-//        logger.debug("扫描中{}",tasks);
+
         if (!tasks.isEmpty()){
-//            logger.debug("扫描预发布帖子");
+
             for (String taskId : tasks) {
                 String jwt = stringRedisTemplate.opsForValue().get(taskId);
-//                logger.debug("获取到JWT{}",jwt);
+
                 Claims claims = JwtUtils.parseJWT(jwt);
                 Long StringExp = (Long) claims.get("exp");
                 Date exp = new Date(StringExp);
                 if (exp.after(new Date(System.currentTimeMillis()))) {
-                    logger.debug("定时结束进入到发布阶段");
+                    logger.info("定时结束进入到发布阶段");
                     logger.info("解析即将过期的令牌为:{}",claims);
-                    logger.debug("改变获取的帖子的帖子状态");
+                    logger.info("改变获取的帖子的帖子状态");
                     PostPO thePost = new PostPO((String) claims.get("uuid"),
                             (String) claims.get("authorId"),
                             (String) claims.get("title"),
@@ -49,7 +49,7 @@ public class PostScanConfig {
                             null,
                             (List<String>) claims.get("tags"));
                     postService.publishPost(thePost);
-                    logger.debug("发布帖子");
+                    logger.info("发布帖子");
                     stringRedisTemplate.delete(taskId);
                 }
             }

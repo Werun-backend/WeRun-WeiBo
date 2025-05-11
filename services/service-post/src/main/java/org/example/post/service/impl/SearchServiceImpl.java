@@ -22,16 +22,16 @@ public class SearchServiceImpl implements SearchService {
     //根据关键词查询
     @Override
     public PageResult<PostVO> searchPosts(String keyword, int page, int pageSize) {
-            logger.debug("正在进行搜索帖子服务");
+            logger.info("正在进行搜索帖子服务");
         if (page <= 0 || pageSize <= 0) {
             // 如果页码或页面大小小于等于0，则抛出异常
             logger.error("帖子分页发生错误");
             throw new IllegalArgumentException("帖子分页发生错误");
         }
         try {
-            logger.debug("正在从DAO层获取数据");
+            logger.info("正在从DAO层获取数据");
             List<PostVO> list = searchPostMapper.searchPosts(keyword);
-            logger.debug("数据获取完成");
+            logger.info("数据获取完成");
             int total = list.size();
             return new PageResult<>(total, list, page, pageSize);
         } catch (Exception e) {
@@ -51,7 +51,7 @@ public class SearchServiceImpl implements SearchService {
             throw new IllegalArgumentException("Page and pageSize must be greater than 0");
         }
         try {
-            logger.debug("正在从DAO层获取数据，利用tag");
+            logger.info("正在从DAO层获取数据，利用tag");
             List<PostVO> list = searchPostMapper.searchPostsByTag(tagName);
             int total = list.size();
             return new PageResult<>(total, list, page, pageSize);
@@ -69,7 +69,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public BaseResult<Integer> checkPostsById(String uuid, String authorId) {
-        logger.debug("正在检查帖子");
+        logger.info("正在检查帖子");
         return BaseResult.success(searchPostMapper.checkPostsById(uuid,authorId));
     }
 }

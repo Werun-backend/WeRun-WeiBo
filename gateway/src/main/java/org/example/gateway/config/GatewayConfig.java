@@ -1,5 +1,6 @@
 package org.example.gateway.config;
 
+import org.example.common.model.util.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -19,6 +20,8 @@ import java.util.Set;
 public class GatewayConfig implements GlobalFilter {
     private static final Set<String> WHITELIST_URLS = Set.of(
             "/post/push/",
+            "/post/search/",
+            "/post/userPost/",
             "/auth/"
             // 可以添加更多需要白名单的URL
     );
@@ -46,6 +49,11 @@ public class GatewayConfig implements GlobalFilter {
         if (token == null || !token.startsWith("Bearer ")) {
             logger.error("请求头为空或者请求头的开头没有加上Bearer前缀");
             return Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized"));
+        }
+        try {
+            JwtUtils.parseJWT(token.substring(7));
+        } catch (Exception e) {
+            throw new RuntimeException("解析令牌失败");
         }
         logger.debug("完成请求头规范校验");
         String jwt = token.substring(7);

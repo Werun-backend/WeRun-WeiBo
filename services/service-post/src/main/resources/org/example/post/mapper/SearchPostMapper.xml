@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.post.mapper.SearchPostMapper">
+
+    <select id="searchPosts" resultMap="PostVOMap">
+        SELECT
+            p.uuid, p.author_id, p.title, p.content,
+            p.create_time, p.update_time, p.comment_count,null
+        FROM post p
+        WHERE title LIKE CONCAT('%', #{keyword}, '%') OR content LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
+    <select id="searchPostsByTag"  resultMap="PostVOMap" >
+        SELECT
+            p.uuid, p.author_id, p.title, p.content,
+            p.create_time, p.update_time, p.comment_count,null
+        FROM post p
+            JOIN post_tags pt ON p.uuid = pt.post_id
+        WHERE pt.tagname LIKE CONCAT('%', #{tagname}, '%')
+    </select>
+
+    <select id="searchPostsById"  resultMap="PostVOMap" >
+        SELECT
+            p.uuid, p.author_id, p.title, p.content,
+            p.create_time, p.update_time, p.comment_count,null
+        FROM post p
+        WHERE uuid = #{uuid}
+    </select>
+
+    <select id="checkPostsById"  resultType="Integer" >
+        SELECT
+            count(*)
+        FROM post
+        WHERE uuid = #{uuid} AND author_id = #{authorId}
+    </select>
+
+    <resultMap id="PostVOMap" type="org.example.post.pojo.vo.PostVO">
+        <id property="uuid" column="uuid" />
+        <result property="authorId" column="authorId" />
+        <result property="title" column="title" />
+        <result property="content" column="content" />
+        <result property="createTime" column="createTime" />
+        <result property="updateTime" column="updateTime" />
+        <result property="commentCount" column="commentCount" />
+        <collection property="tags" ofType="String" column="uuid"
+                    select="FIND_TAGS" />
+    </resultMap>
+    <select id="FIND_TAGS" resultType="String">
+        SELECT tagname FROM WeiBo.post_tags WHERE post_id = #{uuid}
+    </select>
+</mapper>

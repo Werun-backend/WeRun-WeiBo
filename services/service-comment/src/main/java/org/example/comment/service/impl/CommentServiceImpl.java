@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@Transactional
 public class CommentServiceImpl implements CommentService {
     private final CommentMapper commentMapper;
     private final RedisIdWorker redisIdWorker;
@@ -123,14 +125,14 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Async
-    public void cancellike(String commentId, String token) {
+    public void cancelLike(String commentId, String token) {
         if(commentMapper.checkLike(commentId,JwtUtils.getUserId(token))==0){
             logger.error("你已经取消点赞过了");
             throw new RuntimeException("你已经取消点赞过了");
         }
-        commentMapper.cancellike(commentId,JwtUtils.getUserId(token));
+        commentMapper.dislike(commentId,JwtUtils.getUserId(token));
         logger.debug("取消点赞关系");
-        commentMapper.addLikeNum(commentId);
+        commentMapper.cancelLike(commentId);
     }
 
     @Override

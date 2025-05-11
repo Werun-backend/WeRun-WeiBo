@@ -26,7 +26,7 @@ public interface CommentService {
 
     void like(String commentId, String token);
 
-    void cancellike(String commentId, String token);
+    void cancelLike(String commentId, String token);
 
     CompletableFuture<List<CTPPlusVO>> getCommentsByLikes(String postId);
 }
