@@ -12,6 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * @author 32218
+ */
 public interface LoginService {
     CompletableFuture<LoginInfVO> login(@Valid LoginDTO loginDTO);
 

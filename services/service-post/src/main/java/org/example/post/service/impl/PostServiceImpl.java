@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 @Service
@@ -61,7 +62,8 @@ public class PostServiceImpl implements PostService {
         } else if (postPO.getSchedule() == 1 || postPO.getSchedule() == 2) {
             logger.info("开始发布帖子");
             postMapper.insertPost(postPO);
-            logger.info("帖子发布完成");// 查询帖子的 ID
+            // 查询帖子的 ID
+            logger.info("帖子发布完成");
             String postId = postPO.getUuid();
             logger.info("将标签放到数据库进行管理");
             if (postPO.getTags() != null && !postPO.getTags().isEmpty()) {
@@ -168,6 +170,6 @@ public class PostServiceImpl implements PostService {
         map.put("scheduleTime", exp);
         map.put("tags", postPO.getTags());
         String jwt = JwtUtils.generateJwt(map);
-        stringRedisTemplate.opsForValue().set("post:" + postPO.getUuid(), jwt);
+        stringRedisTemplate.opsForValue().set("post:" + postPO.getUuid(), jwt,  postPO.getScheduleTime().getTime() - System.currentTimeMillis() + 1000*60*60, TimeUnit.MILLISECONDS);
     }
 }

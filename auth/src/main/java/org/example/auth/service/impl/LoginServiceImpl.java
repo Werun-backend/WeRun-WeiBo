@@ -34,6 +34,9 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author 32218
+ */
 @Service
 public class LoginServiceImpl implements LoginService {
 
@@ -146,7 +149,7 @@ public class LoginServiceImpl implements LoginService {
     public LoginInfVO LoginByCode(CheckEmailBO l) {
         logger.info("进行验证码检测");
         CheckCode(l,"code");
-        List<UserBO> userBO = loginMapper.LoginByCode(l.getEmail());
+        List<UserBO> userBO = loginMapper.loginByCode(l.getEmail());
         return new LoginInfVO(jwtMaker(userBO),userBO.get(0));
     }
 
@@ -172,7 +175,7 @@ public class LoginServiceImpl implements LoginService {
         CheckCode(new CheckEmailBO(resetPasswordDTO.getEmail(), resetPasswordDTO.getCode()),"reset");
         resetPasswordDTO.setPassword(MD5Encryptor.encryptToMD5(resetPasswordDTO.getPassword()));
         ResetPO resetPO = new ResetPO(resetPasswordDTO.getEmail(), resetPasswordDTO.getPhone(),resetPasswordDTO.getPassword());
-        loginMapper.ResetPassword(resetPO);
+        loginMapper.resetPassword(resetPO);
     }
 
     @Override

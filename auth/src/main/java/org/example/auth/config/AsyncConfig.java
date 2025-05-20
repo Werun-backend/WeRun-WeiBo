@@ -13,7 +13,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * 默认使用SimpleAsyncTaskExecutor（无复用线程），需自定义高性能线程池：
  * 根据任务类型（CPU/I/O密集型）调整线程池参数。
  * 避免队列容量过大导致内存溢出，推荐使用CallerRunsPolicy拒绝策略
- * @author 黄湘湘
+ * @author 32218
  * @since 2025/4/20
  */
 

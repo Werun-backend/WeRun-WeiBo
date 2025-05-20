@@ -12,18 +12,18 @@ import org.example.common.model.user.UserBO;
 import java.util.List;
 
 /**
- * @author 黄湘湘
+ * @author 32218
  */
 @Mapper
 public interface LoginMapper {
-    @Select("select UUID, USERNAME, PHONE, EMAIL, PASSWORD, STATUS, SIGNATURE, AVATARURL, ADDRESS, CREATED_AT, UPDATED_AT, GENDER, BIRTHDAY from WeiBo.Users where Phone = #{Phone} and Password =#{Password}")
-    List<UserBO> login(LoginDTO loginDTO);
-    @Insert("insert into WeiBo.Users (Email,Username,Phone,Password,Gender,AvatarURL,uuid) values (#{Email},#{Username},#{Phone},#{Password},#{Gender},#{AvatarURL},#{uuid})")
-    void register(RegisterPO registerPO);
-    @Select("select UUID, USERNAME, PHONE, EMAIL, PASSWORD, STATUS, SIGNATURE, AVATARURL, ADDRESS, CREATED_AT, UPDATED_AT, GENDER, BIRTHDAY from WeiBo.Users where Email = #{Email}")
-    List<UserBO> LoginByCode(String Email);
-    @Update("update WeiBo.Users set Password = #{Password} where Email = #{Email} and Phone =#{Phone}")
-    void ResetPassword(ResetPO resetPO);
-    @Select("select count(*) from WeiBo.Users where Phone = #{Phone} or Email = #{Email}")
-    int checkUnique(String Phone, String Email);
+    @Select("select UUID, USERNAME, PHONE, EMAIL, PASSWORD, STATUS, SIGNATURE, AVATARURL, ADDRESS, CREATED_AT, UPDATED_AT, GENDER, BIRTHDAY from WeiBo.Users where Phone = #{phone} and Password =#{Password}")
+    List<UserBO> login(LoginDTO loginDto);
+    @Insert("insert into WeiBo.Users (Email,Username,Phone,Password,Gender,AvatarURL,uuid) values (#{email},#{Username},#{phone},#{Password},#{Gender},#{AvatarURL},#{uuid})")
+    void register(RegisterPO registerPo);
+    @Select("select UUID, USERNAME, PHONE, EMAIL, PASSWORD, STATUS, SIGNATURE, AVATARURL, ADDRESS, CREATED_AT, UPDATED_AT, GENDER, BIRTHDAY from WeiBo.Users where Email = #{email}")
+    List<UserBO> loginByCode(String email);
+    @Update("update WeiBo.Users set Password = #{Password} where Email = #{email} and Phone =#{phone}")
+    void resetPassword(ResetPO resetPo);
+    @Select("select count(*) from WeiBo.Users where Phone = #{phone} or Email = #{email}")
+    int checkUnique(String phone, String email);
 }

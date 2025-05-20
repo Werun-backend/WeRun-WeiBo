@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Redis分布式ID生成器
  * 用于生成全局唯一的ID，通过Redis来保证同一时间同一前缀的ID不重复
+ * @author 32218
  */
 @Component
 public class RedisIdWorker {

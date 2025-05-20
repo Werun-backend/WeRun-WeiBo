@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * @author 黄湘湘
+ * @author 32218
  */
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {

@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 /**
- * @author 黄湘湘
+ * @author 32218
  */
 @RestController
 @RequestMapping("/auth")
