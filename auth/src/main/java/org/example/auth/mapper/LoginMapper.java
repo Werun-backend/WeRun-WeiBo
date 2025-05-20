@@ -11,6 +11,9 @@ import org.example.common.model.user.UserBO;
 
 import java.util.List;
 
+/**
+ * @author 黄湘湘
+ */
 @Mapper
 public interface LoginMapper {
     @Select("select UUID, USERNAME, PHONE, EMAIL, PASSWORD, STATUS, SIGNATURE, AVATARURL, ADDRESS, CREATED_AT, UPDATED_AT, GENDER, BIRTHDAY from WeiBo.Users where Phone = #{Phone} and Password =#{Password}")

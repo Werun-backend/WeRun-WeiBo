@@ -43,7 +43,7 @@ public class GatewayConfig implements GlobalFilter {
             logger.info("路径 [{}]在白名单，通过访问.", path);
             return chain.filter(exchange);
         }
-        logger.debug("现在在网关过滤器");
+        logger.info("现在在网关过滤器");
         String token = exchange.getRequest().getHeaders().getFirst("Authorization");
         logger.info("获取到请求头为:{}", token);
         if (token == null || !token.startsWith("Bearer ")) {
@@ -55,14 +55,14 @@ public class GatewayConfig implements GlobalFilter {
         } catch (Exception e) {
             throw new RuntimeException("解析令牌失败");
         }
-        logger.debug("完成请求头规范校验");
+        logger.info("完成请求头规范校验");
         String jwt = token.substring(7);
         logger.info("成功获取到JWT为:{}", jwt);
         if (Objects.equals(stringRedisTemplate.opsForValue().get("blacklist:jwt:" + jwt), "BLACK")) {
             logger.error("请求头被列入了黑名单");
             throw new RuntimeException("Token has been blacklisted");
         }
-        logger.debug("黑名单检测完成");
+        logger.info("黑名单检测完成");
 
         return chain.filter(exchange);
 

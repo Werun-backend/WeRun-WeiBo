@@ -58,14 +58,14 @@ public class LoginServiceImpl implements LoginService {
     private List<UserBO> getUserBO(LoginDTO loginDTO) {
         logger.info("现在进行登录,现在的传入的参数为:{}", loginDTO);
         loginDTO.setPassword(MD5Encryptor.encryptToMD5(loginDTO.getPassword()));
-        logger.debug("完成MD5算法加密");
+        logger.info("完成MD5算法加密");
         List<UserBO> userBO = loginMapper.login(loginDTO);
         logger.info("完成密码账号比对,获取的数据为:{}", userBO);
         return userBO;
     }
 
     private LoginVO jwtMaker(List<UserBO> userBO) {
-        logger.debug("现在进入JWT令牌的加工环节");
+        logger.info("现在进入JWT令牌的加工环节");
         List<UserBO> newUserBO = userBO.stream().filter(aLoginPO -> aLoginPO.getStatus() > 0).toList();
         logger.info("进行假删除过的账号的过滤工作,过滤后为:{}", newUserBO);
         if (newUserBO.isEmpty()) {
@@ -79,9 +79,9 @@ public class LoginServiceImpl implements LoginService {
         }else {
             oneloginBO = newUserBO.get(0);
         }
-        logger.debug("负载均衡获取到一个用户信息");
+        logger.info("负载均衡获取到一个用户信息");
         Map<String,Object> map =new HashMap<>();
-        logger.debug("创建Map集合");
+        logger.info("创建Map集合");
         map.put("uuid", oneloginBO.getUuid());
         map.put("username", oneloginBO.getUsername());
         map.put("phone", oneloginBO.getPhone());
@@ -91,41 +91,41 @@ public class LoginServiceImpl implements LoginService {
         map.put("address", oneloginBO.getAddress());
         map.put("gender", oneloginBO.getGender());
         map.put("birthday", oneloginBO.getBirthday());
-        logger.debug("完成Map集合的添加：{}",map);
+        logger.info("完成Map集合的添加：{}",map);
         String jwt = JwtUtils.generateJwt(map);
-        logger.debug("完成JWT令牌加工:{}",jwt);
+        logger.info("完成JWT令牌加工:{}",jwt);
         String refreshJwt = JwtUtils.generateRefreshJwt(map);
-        logger.debug("完成refreshJWT令牌加工:{}",jwt);
+        logger.info("完成refreshJWT令牌加工:{}",jwt);
         return new LoginVO(jwt,refreshJwt);
     }
 
     @Override
     public void logout(String token) {
-        logger.debug("登出操作，将JWT拉黑");
+        logger.info("登出操作，将JWT拉黑");
         stringRedisTemplate.opsForValue().set("blacklist:jwt"+token.substring(7), "BLACK", 3600,java.util.concurrent.TimeUnit.SECONDS);
     }
 
     @Override
     public void register(RegisterDTO registerDTO, MultipartFile file) {
-        logger.debug("现在进行注册操作");
+        logger.info("现在进行注册操作");
         if(loginMapper.checkUnique(registerDTO.getPhone(),registerDTO.getEmail())!=0){
             logger.error("注册发生重复的问题");
             throw new RuntimeException("手机号或邮箱已注册");
         }
-        logger.debug("完成发生验证码进行下面的操作");
+        logger.info("完成发生验证码进行下面的操作");
         sendCode(registerDTO.getEmail(),"register");
-        logger.debug("完成校验码的邮箱发送");
+        logger.info("完成校验码的邮箱发送");
     }
 
     @Override
     @Async
     public void mLogin(String Email) {
-        logger.debug("现在进行邮箱登录操作");
+        logger.info("现在进行邮箱登录操作");
         sendCode(Email, "code");
     }
 
     private void sendCode(String email, String type) {
-        logger.debug("进行邮箱发送验证码");
+        logger.info("进行邮箱发送验证码");
         if (stringRedisTemplate.hasKey("email:code:"+email)) {
             logger.error("验证码发过了,如需重新接受等待600s");
             throw new RuntimeException("验证码已发送");
@@ -139,12 +139,12 @@ public class LoginServiceImpl implements LoginService {
         mail.setTo(email);
         mail.setFrom("A19861577050@126.com");
         sender.send(mail);
-        logger.debug("完成验证码的发送");
+        logger.info("完成验证码的发送");
     }
 
     @Override
     public LoginInfVO LoginByCode(CheckEmailBO l) {
-        logger.debug("进行验证码检测");
+        logger.info("进行验证码检测");
         CheckCode(l,"code");
         List<UserBO> userBO = loginMapper.LoginByCode(l.getEmail());
         return new LoginInfVO(jwtMaker(userBO),userBO.get(0));
@@ -159,7 +159,7 @@ public class LoginServiceImpl implements LoginService {
         }else {
             throw new RuntimeException("验证码已过期");
         }
-        logger.debug("登录验证码的校验成功");
+        logger.info("登录验证码的校验成功");
     }
 
     @Override
@@ -179,7 +179,7 @@ public class LoginServiceImpl implements LoginService {
     public void registerOK(RegisterDTO registerDTO, MultipartFile file, String code) {
         registerDTO.setPassword(MD5Encryptor.encryptToMD5(registerDTO.getPassword()));
         CheckCode(new CheckEmailBO(registerDTO.getEmail(), code),"register");
-        logger.debug("完成验证码的校验");
+        logger.info("完成验证码的校验");
         RedisIdWorker redisIdWorker = new RedisIdWorker(stringRedisTemplate);
         String imagePath = null;
         try {
@@ -194,7 +194,7 @@ public class LoginServiceImpl implements LoginService {
         } catch (Exception e) {
             logger.error("图片上传出现问题");
         }
-        logger.debug("现在进行注册信息存入操作");
+        logger.info("现在进行注册信息存入操作");
         loginMapper.register(new RegisterPO(
                 registerDTO.getEmail(),
                 registerDTO.getUserName(),

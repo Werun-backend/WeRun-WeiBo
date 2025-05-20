@@ -23,16 +23,30 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+/**
+ * @author 黄湘湘
+ */
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class LoginController {
     private final LoginService loginService;
     Logger logger = LoggerFactory.getLogger(LoginController.class);
+
+    /**
+     * 普通登录类
+     * @param loginDTO 登录实体类
+     * @return 用户信息
+     */
+
     @PostMapping("/login/common")
     public BaseResult<Object> login(@RequestBody @Valid LoginDTO loginDTO) {
         return BaseResult.success("登录成功",loginService.login(loginDTO).join());
     }
+
+    /**
+     * 刷新token
+     */
     @PostMapping("/refresh")
     public BaseResult<Object> refreshToken(@RequestBody LoginVO request) {
         String refreshToken = request.getRefreshToken();
@@ -55,7 +69,7 @@ public class LoginController {
     @GetMapping("/login/emailSend")
     public BaseResult<Object> mailLogin(@NotNull @Pattern(regexp = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$",
             message = "请填入正确的邮箱的格式")String Email) {
-        logger.debug("传入参数:{}",Email);
+        logger.info("传入参数:{}",Email);
         try {
             loginService.mLogin(Email);
         } catch (Exception e) {
@@ -76,6 +90,11 @@ public class LoginController {
         }
         return BaseResult.success("登录成功", loginVO);
     }
+
+    /**
+     *
+     * @param token 请求头
+     */
     @PostMapping("/logout")
     public BaseResult<Object> logout(@RequestHeader(value = "Authorization") String token) {
         loginService.logout(token);

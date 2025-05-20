@@ -13,6 +13,8 @@ import java.util.concurrent.ThreadPoolExecutor;
  * 默认使用SimpleAsyncTaskExecutor（无复用线程），需自定义高性能线程池：
  * 根据任务类型（CPU/I/O密集型）调整线程池参数。
  * 避免队列容量过大导致内存溢出，推荐使用CallerRunsPolicy拒绝策略
+ * @author 黄湘湘
+ * @since 2025/4/20
  */
 
 @Configuration
@@ -22,11 +24,17 @@ public class AsyncConfig implements AsyncConfigurer {
     @Override
     public Executor getAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(10);    // 核心线程数
-        executor.setMaxPoolSize(50);     // 最大线程数
-        executor.setQueueCapacity(100);  // 队列容量
-        executor.setThreadNamePrefix("Async-"); // 线程名前缀
-        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy()); // 拒绝策略
+        //核心线程数
+        executor.setCorePoolSize(10);
+        //最大线程数
+        executor.setMaxPoolSize(50);
+        //队列容量
+        executor.setQueueCapacity(100);
+        //线程名前缀
+        executor.setThreadNamePrefix("Async-");
+        //拒绝策略
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        //初始化
         executor.initialize();
         return executor;
     }

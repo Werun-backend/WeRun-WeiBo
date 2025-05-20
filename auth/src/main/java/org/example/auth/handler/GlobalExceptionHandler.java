@@ -16,6 +16,7 @@ import java.util.Map;
 /**
  * 全局异常处理类
  * 用于统一处理项目中的异常
+ * @author 黄湘湘
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {

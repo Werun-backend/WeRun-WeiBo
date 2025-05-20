@@ -1,17 +1,14 @@
 package org.example.gateway.handler;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.example.common.model.global.BaseResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.server.ServerWebExchange;
 
 /**
  * 全局异常处理类
@@ -30,34 +27,26 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseBody
     @ResponseStatus
-    public BaseResult<Object> handlerException(Exception e,HttpServletRequest request) {
-        final Map<String, String> headMap = new HashMap<>();
-        Enumeration<String> headerNames = request.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement();
-            headMap.put(headerName, request.getHeader(headerName));
-        }
+    public BaseResult<Object> handlerException(Exception e, ServerWebExchange exchange) {
+        ServerHttpRequest request = exchange.getRequest();
         log.error("""
                         返回指定的请求头:{}
                         返回这个请求的HTTP方法的名称:{}
-                        请求用户的登录信息:{}
                         请求的URL路径后包含字符串:{}
                         访问路径:{}
                         报错信息：{}
                         ===== 请求失败 =====""",
-                headMap,
+                request.getHeaders().entrySet(),
                 request.getMethod(),
-                request.getRemoteUser(),
-                request.getQueryString(),
-                request.getRequestURL(),
+                request.getQueryParams(),
+                request.getPath(),
                 e.getMessage());
         // 返回错误响应，包含异常信息
 
-        return BaseResult.error(500, "返回指定的请求头:" + headMap
+        return BaseResult.error(500, "返回指定的请求头:" + request.getHeaders().entrySet()
                 + "返回这个请求的HTTP方法的名称:" + request.getMethod()
-                + "请求用户的登录信息:" + request.getRemoteUser()
-                + "请求的URL路径后包含字符串:" + request.getQueryString()
-                + "访问路径:" + request.getRequestURL()
+                + "请求的URL路径后包含字符串:" + request.getQueryParams()
+                + "访问路径:" + request.getPath()
                 + "报错信息：" + e.getMessage());
     }
 }

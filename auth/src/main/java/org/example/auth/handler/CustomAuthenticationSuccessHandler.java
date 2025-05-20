@@ -11,6 +11,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * @author 黄湘湘
+ */
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -20,7 +23,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         if (authentication.getPrincipal() instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oauth2User) {
             // 处理 OAuth2 用户（包括 GitHub）
 
-            String userName = oauth2User.getAttribute("login"); // 或 "login"（GitHub 的用户名字段）
+            // 或 "login"（GitHub 的用户名字段）
+            String userName = oauth2User.getAttribute("login");
             Map<String, Object> userAttributes = oauth2User.getAttributes();
 
             // 返回 JSON 响应
@@ -30,7 +34,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         } else if (authentication.getPrincipal() instanceof DefaultOidcUser oidcUser) {
             // 处理 OIDC 用户（适用于 Google 等）
 
-            String userName = oidcUser.getFullName(); // 或 "name"
+            // 或 "name"
+            String userName = oidcUser.getFullName();
             Map<String, Object> userAttributes = oidcUser.getClaims();
 
             // 返回 JSON 响应

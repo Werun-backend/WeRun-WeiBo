@@ -12,6 +12,9 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.savedrequest.NullRequestCache;
 
+/**
+ * @author 黄湘湘
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {

@@ -15,6 +15,9 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author 黄湘湘
+ */
 @Slf4j
 @Aspect
 @Component
@@ -29,8 +32,12 @@ public class RequestLogAspect {
         // 获取 HttpServletRequest
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = null;
-        if (attributes != null) request = attributes.getRequest();
-        if(request==null) throw new RuntimeException("请求为空");
+        if (attributes != null) {
+            request = attributes.getRequest();
+        }
+        if(request==null) {
+            throw new RuntimeException("请求为空");
+        }
         // 记录请求基本信息
         log.info("===== 请求开始 =====");
         log.info("URL: {}", request.getRequestURL());
