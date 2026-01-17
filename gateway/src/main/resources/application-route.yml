@@ -1,0 +1,24 @@
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns: "*"    # 关键修改：使用 allowedOriginPatterns
+            allowedMethods: "*"                  # 允许所有HTTP方法（GET/POST/PUT等）
+            allowedHeaders: "*"                  # 允许所有请求头
+            allowCredentials: true               # 允许携带Cookie
+            maxAge: 3600                         # 预检请求缓存时间（秒）
+      routes:
+        - id: service-post
+          uri: lb://service-post
+          predicates:
+            - Path=/post/**
+        - id: service-friend
+          uri: lb://service-comment
+          predicates:
+            - Path=/comment/**
+        - id: auth
+          uri: lb://auth
+          predicates:
+            - Path=/auth/**
